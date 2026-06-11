@@ -1,4 +1,6 @@
 {
+  "name": "papan-fokus",
+  "framework": "nextjs",
   "crons": [
     {
       "path": "/api/cron/cleanup",

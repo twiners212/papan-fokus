@@ -52,3 +52,5 @@ node_modules/
 # Agent Config Files
 AGENTS.md
 CLAUDE.md
+
+.vercel
