@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 246 83% 58%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 214 32% 91%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 214 32% 91%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 246 83% 58%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+
+    /* PapanFokus Custom Colors (Light Mode) */
+    --canvas: 210 40% 98%;
+    --surface: 0 0% 100%;
+    --surface-container-low: 210 40% 96%;
+    --surface-container: 214 32% 91%;
+    --surface-container-high: 210 31% 80%;
+    --outline: 214 32% 91%;
+    --outline-variant: 210 31% 80%;
+    --border-subtle: 210 40% 96%;
+    --on-surface: 222 47% 11%;
+    --text-muted: 215 16% 47%;
+  }
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 246 83% 58%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 215 28% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 246 83% 58%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+
+    /* PapanFokus Custom Colors (Dark Mode) */
+    --canvas: 224 71% 4%;
+    --surface: 222 47% 11%;
+    --surface-container-low: 215 28% 17%;
+    --surface-container: 215 20% 25%;
+    --surface-container-high: 215 16% 35%;
+    --outline: 215 28% 17%;
+    --outline-variant: 215 20% 25%;
+    --border-subtle: 215 28% 17%;
+    --on-surface: 210 40% 98%;
+    --text-muted: 215 20% 65%;
+  }
+}
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-image: 
+      radial-gradient(circle at 100% 0%, hsl(var(--primary) / 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 0% 100%, hsl(var(--primary) / 0.08) 0%, transparent 40%);
+    background-attachment: fixed;
+  }
+}
+
+@keyframes fadeSlideIn { 
+  to { opacity: 1; filter: blur(0px); transform: translateY(0px); } 
+}
+@keyframes slideRightIn { 
+  to { opacity: 1; filter: blur(0px); transform: translateX(0px); } 
+}
+@keyframes testimonialIn { 
+  to { opacity: 1; filter: blur(0px); transform: translateY(0px) scale(1); } 
+}
