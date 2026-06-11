@@ -1,5 +1,7 @@
 # PapanFokus
 
+![PapanFokus Kanban Board](design/stitch/images/bac7608aa2954314b9478e15004d8c6c.png)
+
 PapanFokus adalah aplikasi manajemen proyek kolaboratif berbasis Kanban (*mini-Jira/Trello*). Dirancang dengan fokus pada kecepatan, isolasi penyewa (*tenant isolation*), dan pembaruan antarmuka *real-time* untuk tim modern.
 
 ## 🚀 Fitur Utama
