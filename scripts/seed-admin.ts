@@ -20,7 +20,7 @@ async function seedAdmin() {
     
     // Create random UUID for the new user if we do it via DB:
     const adminEmail = "admin@papanfokus.com";
-    const adminPassword = "Password123!";
+    const adminPassword = process.env.GUEST_PASSWORD || "Password123!";
     const adminName = "Admin PapanFokus";
 
     // Clean up existing admin if it already exists from a failed run

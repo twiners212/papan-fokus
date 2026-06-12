@@ -54,7 +54,7 @@ function LoginContent() {
 
       const { error } = await authClient.signIn.email({
         email: "guest@papanfokus.com",
-        password: "Password123!",
+        password: process.env.NEXT_PUBLIC_GUEST_PASSWORD || "Password123!",
       });
 
       if (error) {

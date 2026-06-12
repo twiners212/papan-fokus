@@ -17,7 +17,7 @@ export async function ensureGuestUserAction() {
       await auth.api.signUpEmail({
         body: {
           email: "guest@papanfokus.com",
-          password: "Password123!",
+          password: process.env.GUEST_PASSWORD || "Password123!",
           name: "Tamu PapanFokus",
         },
       });
