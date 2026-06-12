@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MoreHorizontal, Activity, CircleUserRound, Calendar as CalendarIcon, ArrowUpCircle, ArrowDownCircle, ArrowRightCircle, AlertCircle } from "lucide-react";
+import { MoreHorizontal, Activity, CircleUserRound, Calendar as CalendarIcon, ArrowUpCircle, ArrowDownCircle, ArrowRightCircle, AlertCircle, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getWorkspaceMembersAction, updateTaskAction, getTaskActivityLogsAction } from "@/actions/board-actions";
@@ -164,7 +164,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
   return (
     <Sheet open={isOpen} onOpenChange={(open) => { if (!open) handleClose(); }}>
       <SheetContent 
-        className="w-full sm:w-[480px] lg:w-[600px] sm:max-w-none bg-surface-container border-l border-border-subtle p-0 flex flex-col focus-visible:outline-none"
+        className="w-[90vw] sm:w-[480px] lg:w-[600px] sm:max-w-none bg-surface-container border-l border-border-subtle p-0 flex flex-col focus-visible:outline-none [&>button]:hidden"
       >
         <SheetHeader className="sr-only">
           <SheetTitle>Task Details</SheetTitle>
@@ -187,7 +187,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
               placeholder="Task title"
             />
           </div>
-          <div className="flex items-center gap-1 mt-1">
+          <div className="flex items-center gap-2 mt-1">
             {(isAdmin || isCreator) && (
               <Popover open={showMenu} onOpenChange={setShowMenu}>
                 <PopoverTrigger asChild>
@@ -213,6 +213,14 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
                 </PopoverContent>
               </Popover>
             )}
+
+            <button 
+              onClick={handleClose}
+              className="w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center rounded hover:bg-surface-container-high text-text-muted hover:text-on-surface transition-colors cursor-pointer"
+              aria-label="Tutup detail tugas"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
         </header>
 
