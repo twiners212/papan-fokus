@@ -41,30 +41,38 @@ Aplikasi PapanFokus telah menyelesaikan seluruh fase pengembangan *Minimum Viabl
 - [x] Implementasi dan kelulusan 100% *Test Suites* Unit/Integration menggunakan Vitest dan E2E melalui Playwright.
 - [x] Audit dan pembersihan aset sisa (*development scripts*, `console.log`, folder *cache*, file *dummy*).
 
-### 6. Deployment Produksi & Optimasi Portofolio (Terbaru)
+### 6. Deployment Produksi & Optimasi Portofolio
 - [x] **Deployment ke Vercel:** Aplikasi frontend berhasil diluncurkan di [papan-fokus.vercel.app](https://papan-fokus.vercel.app).
 - [x] **Integrasi Database:** Menghubungkan database Supabase menggunakan *Transaction Pooler* untuk kompatibilitas lingkungan Serverless.
 - [x] **GitHub Portfolio Optimization:** Mengoptimalkan halaman repositori dengan Shields.io badges, tautan demo langsung, panduan instalasi mendalam, dan tangkapan layar tampilan desktop & mobile.
 
+### 7. UX, Animasi, Aksesibilitas, & Dokumentasi (Terbaru - Juni 2026)
+- [x] **Onboarding & Guest Login:** Implementasi tombol *"Masuk sebagai Tamu"* (guest login via Better Auth programmatic creation) untuk mempermudah evaluasi instan oleh perekrut.
+- [x] **Landing Page Dinamis (`/landing-page`):** Halaman beranda statis yang elegan dengan desain glassmorphic untuk memaparkan keunggulan fitur aplikasi sebelum masuk ke dashboard.
+- [x] **Empty State & Seeding:** Desain ilustrasi SVG interaktif dan fitur *"Generate Dummy Data"* di workspace kosong untuk mempermudah pengisian data contoh secara instan.
+- [x] **Mikro-Animasi (Framer Motion):** Penambahan transisi halus pada penutupan/pembukaan sidebar, kemunculan tugas baru, pemuatan kerangka (*loading skeletons*), serta kurva elastis pada pelepasan kartu drag-and-drop.
+- [x] **Aksesibilitas (A11y):** Dukungan navigasi keyboard penuh pada kartu papan (tombol `Enter` untuk membuka laci tugas) dan penambahan label aksesibilitas (`aria-label`) komprehensif pada tombol tanpa teks.
+- [x] **Dokumentasi & Diagram Teknis:** Penambahan diagram alir data (*sequence diagram* Mermaid) interaktif di [ARCHITECTURE.md](file:///c:/Users/radit/.gemini/antigravity/scratch/PapanFokus/docs/ARCHITECTURE.md) yang menjelaskan alur dari Next.js Client -> Server Actions -> Zod -> DAL Guard -> Database RLS.
+
 ---
 
-## 🚀 Langkah Selanjutnya (Rekomendasi Perbaikan & Peningkatan)
+## 🚀 Langkah Selanjutnya (Rekomendasi Perbaikan & Peningkatan Masa Depan)
 
-Untuk meningkatkan nilai proyek ini sebagai portofolio developer papan atas, berikut adalah daftar perbaikan yang direkomendasikan untuk dieksekusi selanjutnya:
+Untuk terus meningkatkan kualitas dan kedalaman teknis aplikasi ini sebagai portofolio level senior, berikut adalah beberapa area yang direkomendasikan untuk pengembangan selanjutnya:
 
-### 1. Peningkatan UI/UX & Onboarding (Prioritas Tinggi)
-- [ ] **Fitur Guest / Demo Login:** Tambahkan tombol *"Masuk sebagai Tamu"* di halaman login agar perekrut dapat mencoba aplikasi secara instan tanpa perlu mendaftar email.
-- [ ] **Landing Page Sederhana:** Buat halaman beranda (`/`) statis yang menarik untuk menjelaskan fitur utama sebelum mengarahkan perekrut ke form login.
-- [ ] **Empty State Illustration:** Tambahkan ilustrasi SVG interaktif dan tombol *"Generate Dummy Data"* ketika workspace baru masih kosong.
+### 1. Fitur Pencarian & Filter Tingkat Lanjut (Search & Filter)
+- [ ] **Real-Time Filtering:** Tambahkan panel filter di papan Kanban untuk memfilter tugas secara instan berdasarkan anggota tim (*assignee*), tingkat prioritas (High, Medium, Low), atau label tertentu.
+- [ ] **Global Search:** Implementasi bilah pencarian responsif untuk mencari kartu tugas berdasarkan judul dan deskripsi di seluruh kolom secara real-time.
 
-### 2. Mikro-Animasi & Umpan Balik Visual
-- [ ] **Framer Motion Integration:** Terapkan transisi halus saat membuka modal dialog, membuat kartu baru, dan melipat navigasi samping.
-- [ ] **Card Drop Transition:** Sempurnakan animasi saat kartu dilepas (*drag-end*) agar pergerakannya terasa lebih organik dan responsif.
-- [ ] **Loading Skeletons:** Sediakan tampilan kerangka (*skeleton screens*) saat server sedang memproses penambahan kolom atau kartu baru.
+### 2. Notifikasi & Aktivitas Kolaborasi (Collaboration Feed)
+- [ ] **Real-time Notifications:** Hubungkan notifikasi dalam aplikasi menggunakan Supabase Realtime ketika pengguna ditugaskan ke tugas baru atau ketika tugas yang mereka ikuti diubah statusnya.
+- [ ] **Email Digest / Integration:** Kirim notifikasi ringkasan mingguan atau instan menggunakan penyedia email (seperti Resend) saat terjadi perubahan penting pada ruang kerja.
 
-### 3. Aksesibilitas (Accessibility / A11y)
-- [ ] **Keyboard Navigation:** Pastikan seluruh fungsionalitas Kanban dapat dioperasikan menggunakan keyboard (tombol Tab dan tombol Arah).
-- [ ] **Aria Labels:** Tambahkan label deskriptif (`aria-label`) pada elemen interaktif drag-and-drop dan tombol ikon tanpa teks.
+### 3. Subtask / Checklist Manajemen
+- [ ] **Nested Checklist:** Tambahkan dukungan daftar sub-tugas (checklist) di dalam panel detail tugas utama, lengkap dengan progress bar persentase penyelesaian untuk pelacakan yang lebih terperinci.
 
-### 4. Presentasi Portofolio & Dokumentasi Teknik
-- [ ] **Diagram Arsitektur:** Buat dan sematkan diagram alir data backend (Next.js -> DAL Guard -> Supabase RLS) di berkas `ARCHITECTURE.md` untuk membuktikan pemahaman sistem yang mendalam kepada perekrut.
+### 4. Visualisasi Analitik Produktivitas (Rich Analytics Dashboard)
+- [ ] **Interactive Charts:** Integrasikan pustaka grafik seperti Recharts atau Shadcn Charts pada halaman `/analytics` untuk menampilkan visualisasi Burn-down Chart, grafik beban kerja per anggota tim, dan distribusi tugas per kategori.
+
+### 5. Editor Deskripsi Kaya (Rich Text Description)
+- [ ] **Markdown / WYSIWYG Editor:** Ganti textarea deskripsi standar dengan editor teks kaya minimalis (seperti TipTap atau Quill) untuk memungkinkan pembuatan daftar, penulisan kode terformat, dan pemformatan teks tebal/miring.

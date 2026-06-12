@@ -103,3 +103,14 @@
 @keyframes testimonialIn { 
   to { opacity: 1; filter: blur(0px); transform: translateY(0px) scale(1); } 
 }
+
+/* Custom utility for shifting page headers when the sidebar is collapsed */
+.layout-header {
+  transition: padding-left 0.2s ease-in-out;
+}
+
+@media (min-width: 768px) {
+  [data-sidebar-collapsed="true"] .layout-header {
+    padding-left: 4.5rem !important;
+  }
+}

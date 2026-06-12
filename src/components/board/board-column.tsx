@@ -5,6 +5,7 @@ import { Plus, MoreHorizontal } from "lucide-react";
 import { useSortable, SortableContext } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { BoardTask } from "./board-task";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Column {
   id: string;
@@ -25,9 +26,11 @@ interface BoardColumnProps {
   tasks: Task[];
   onTaskClick?: (task: Task) => void;
   onCreateTask?: (columnId: string, title: string) => void;
+  isPending?: boolean;
+  pendingTaskTitle?: string;
 }
 
-export function BoardColumn({ column, tasks, onTaskClick, onCreateTask }: BoardColumnProps) {
+export function BoardColumn({ column, tasks, onTaskClick, onCreateTask, isPending, pendingTaskTitle }: BoardColumnProps) {
   const [isCreating, setIsCreating] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState("");
 
@@ -89,7 +92,7 @@ export function BoardColumn({ column, tasks, onTaskClick, onCreateTask }: BoardC
       <div 
         {...attributes} 
         {...listeners} 
-        className="sticky top-0 bg-surface-container-low/95 backdrop-blur px-4 py-3 border-b border-border-subtle flex items-center justify-between z-10 cursor-grab active:cursor-grabbing"
+        className="sticky top-0 bg-surface-container-low/95 backdrop-blur px-4 py-3 border-b border-border-subtle flex items-center justify-between z-10 cursor-grab active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded-t-xl"
       >
         <div className="flex items-center gap-2 pointer-events-none">
           <span className="w-2 h-2 rounded-full bg-primary"></span>
@@ -102,6 +105,7 @@ export function BoardColumn({ column, tasks, onTaskClick, onCreateTask }: BoardC
           className="text-text-muted hover:text-on-surface transition-colors cursor-pointer"
           onPointerDown={(e) => e.stopPropagation()} // Prevent drag when clicking button
           onClick={() => setIsCreating(true)}
+          aria-label={`Tambah tugas di kolom ${column.name}`}
         >
           <Plus className="w-5 h-5" />
         </button>
@@ -110,9 +114,36 @@ export function BoardColumn({ column, tasks, onTaskClick, onCreateTask }: BoardC
       {/* Task List */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
         <SortableContext items={tasksIds}>
-          {tasks.map((task) => (
-            <BoardTask key={task.id} task={task} onClick={onTaskClick} />
-          ))}
+          <AnimatePresence initial={false}>
+            {tasks.map((task) => (
+              <motion.div
+                key={task.id}
+                initial={{ opacity: 0, y: -12, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
+                transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                layout
+              >
+                <BoardTask task={task} onClick={onTaskClick} />
+              </motion.div>
+            ))}
+            {isPending && (
+              <motion.div
+                initial={{ opacity: 0, y: -12, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-surface border border-border-subtle rounded-lg p-3 flex flex-col gap-2 shadow-sm animate-pulse"
+              >
+                <div className="text-sm font-semibold opacity-70 text-on-surface line-clamp-2">
+                  {pendingTaskTitle || "Creating task..."}
+                </div>
+                <div className="flex justify-between items-center mt-2 pt-2 border-t border-border-subtle/30">
+                  <div className="h-3 bg-[#3f3f46]/10 rounded w-12"></div>
+                  <div className="w-5 h-5 rounded-full bg-[#3f3f46]/20"></div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </SortableContext>
 
         {isCreating && (

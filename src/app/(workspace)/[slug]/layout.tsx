@@ -1,4 +1,4 @@
-import { DynamicSidebar } from "@/components/layout/dynamic-sidebar";
+import { AppLayoutWrapper } from "@/components/layout/app-layout-wrapper";
 import { getWorkspaceBySlug } from "@/dal/workspace";
 import { getDailyActivitySummary } from "@/dal/analytics";
 import { auth } from "@/lib/auth";
@@ -24,11 +24,8 @@ export default async function WorkspaceLayout({
   }
   
   return (
-    <div className="h-screen flex overflow-hidden bg-background text-foreground transition-colors duration-200">
-      <DynamicSidebar dailyActivityCount={dailyActivityCount} />
-      <main className="flex-1 ml-0 md:ml-64 h-full flex flex-col overflow-hidden">
-        {children}
-      </main>
-    </div>
+    <AppLayoutWrapper dailyActivityCount={dailyActivityCount}>
+      {children}
+    </AppLayoutWrapper>
   );
 }

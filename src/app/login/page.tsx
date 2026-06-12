@@ -6,6 +6,7 @@ import { useState, useEffect, Suspense } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { ensureGuestUserAction } from "@/actions/auth-actions";
 
 function LoginContent() {
   const router = useRouter();
@@ -14,6 +15,7 @@ function LoginContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isGuestLoading, setIsGuestLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -40,6 +42,37 @@ function LoginContent() {
     router.refresh();
   };
 
+  const handleGuestLogin = async () => {
+    setIsGuestLoading(true);
+    try {
+      const res = await ensureGuestUserAction();
+      if (!res.success) {
+        toast.error(res.error || "Failed to prepare guest account");
+        setIsGuestLoading(false);
+        return;
+      }
+
+      const { error } = await authClient.signIn.email({
+        email: "guest@papanfokus.com",
+        password: "Password123!",
+      });
+
+      if (error) {
+        toast.error(error.message || "Failed to sign in as guest");
+        setIsGuestLoading(false);
+        return;
+      }
+
+      toast.success("Logged in as Tamu PapanFokus!");
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err: any) {
+      console.error(err);
+      toast.error("An unexpected error occurred during guest login");
+      setIsGuestLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen w-full bg-[#09090b] text-[#e5e2e1] selection:bg-[#c8c5ca]/30 selection:text-[#c8c5ca] overflow-x-hidden">
       {/* Left Column: Form */}
@@ -63,75 +96,99 @@ function LoginContent() {
 
           {/* Login Form */}
           {isMounted ? (
-            <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-              {/* Email Input */}
-              <div className="flex flex-col gap-2 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:100ms]">
-                <label className="text-xs text-[#a1a1aa] uppercase tracking-wider font-semibold" htmlFor="email">
-                  Work Email
-                </label>
-                <div className="relative group" suppressHydrationWarning>
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a1a1aa] group-focus-within:text-[#c8c5ca] transition-colors w-5 h-5" />
-                  <input
-                    className="w-full bg-[#1c1b1c]/50 backdrop-blur-sm border border-[#3f3f46] rounded-lg text-[#e5e2e1] text-base pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#c8c5ca]/50 focus:border-[#c8c5ca] focus:bg-[#201f20] transition-all duration-300 placeholder:text-[#3f3f46] shadow-inner disabled:opacity-50"
-                    id="email"
-                    placeholder="name@company.com"
-                    required
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
-
-              {/* Password Input */}
-              <div className="flex flex-col gap-2 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:200ms]">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs text-[#a1a1aa] uppercase tracking-wider font-semibold" htmlFor="password">
-                    Password
+            <div className="flex flex-col gap-6">
+              <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+                {/* Email Input */}
+                <div className="flex flex-col gap-2 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:100ms]">
+                  <label className="text-xs text-[#a1a1aa] uppercase tracking-wider font-semibold" htmlFor="email">
+                    Work Email
                   </label>
-                  <Link href="#" tabIndex={-1} className="text-sm text-[#c8c5ca] hover:text-[#e4e1e6] transition-colors duration-150">
-                    Forgot password?
-                  </Link>
+                  <div className="relative group" suppressHydrationWarning>
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a1a1aa] group-focus-within:text-[#c8c5ca] transition-colors w-5 h-5" />
+                    <input
+                      className="w-full bg-[#1c1b1c]/50 backdrop-blur-sm border border-[#3f3f46] rounded-lg text-[#e5e2e1] text-base pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#c8c5ca]/50 focus:border-[#c8c5ca] focus:bg-[#201f20] transition-all duration-300 placeholder:text-[#3f3f46] shadow-inner disabled:opacity-50"
+                      id="email"
+                      placeholder="name@company.com"
+                      required
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={isLoading || isGuestLoading}
+                    />
+                  </div>
                 </div>
-                <div className="relative group" suppressHydrationWarning>
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a1a1aa] group-focus-within:text-[#c8c5ca] transition-colors w-5 h-5" />
-                  <input
-                    className="w-full bg-[#1c1b1c]/50 backdrop-blur-sm border border-[#3f3f46] rounded-lg text-[#e5e2e1] text-base pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#c8c5ca]/50 focus:border-[#c8c5ca] focus:bg-[#201f20] transition-all duration-300 placeholder:text-[#3f3f46] shadow-inner disabled:opacity-50"
-                    id="password"
-                    placeholder="••••••••"
-                    required
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    disabled={isLoading}
-                  />
+
+                {/* Password Input */}
+                <div className="flex flex-col gap-2 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:200ms]">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs text-[#a1a1aa] uppercase tracking-wider font-semibold" htmlFor="password">
+                      Password
+                    </label>
+                    <Link href="#" tabIndex={-1} className="text-sm text-[#c8c5ca] hover:text-[#e4e1e6] transition-colors duration-150">
+                      Forgot password?
+                    </Link>
+                  </div>
+                  <div className="relative group" suppressHydrationWarning>
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a1a1aa] group-focus-within:text-[#c8c5ca] transition-colors w-5 h-5" />
+                    <input
+                      className="w-full bg-[#1c1b1c]/50 backdrop-blur-sm border border-[#3f3f46] rounded-lg text-[#e5e2e1] text-base pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#c8c5ca]/50 focus:border-[#c8c5ca] focus:bg-[#201f20] transition-all duration-300 placeholder:text-[#3f3f46] shadow-inner disabled:opacity-50"
+                      id="password"
+                      placeholder="••••••••"
+                      required
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={isLoading || isGuestLoading}
+                    />
+                  </div>
                 </div>
+
+                {/* Primary Action */}
+                <button
+                  className="w-full bg-[#c8c5ca] text-[#303033] text-base font-semibold rounded-lg px-4 py-3 mt-2 hover:bg-[#e4e1e6] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 group shadow-lg shadow-[#c8c5ca]/20 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:300ms] disabled:opacity-70 disabled:cursor-not-allowed"
+                  type="submit"
+                  disabled={isLoading || isGuestLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      Sign In
+                      <ArrowRight className="w-5 h-5 opacity-80 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all" />
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {/* Divider */}
+              <div className="relative flex py-2 items-center opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:350ms]">
+                <div className="flex-grow border-t border-[#3f3f46]"></div>
+                <span className="flex-shrink mx-4 text-xs uppercase tracking-wider text-[#a1a1aa] font-semibold">Or</span>
+                <div className="flex-grow border-t border-[#3f3f46]"></div>
               </div>
 
-              {/* Primary Action */}
+              {/* Guest Login Action */}
               <button
-                className="w-full bg-[#c8c5ca] text-[#303033] text-base font-semibold rounded-lg px-4 py-3 mt-2 hover:bg-[#e4e1e6] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 group shadow-lg shadow-[#c8c5ca]/20 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:300ms] disabled:opacity-70 disabled:cursor-not-allowed"
-                type="submit"
-                disabled={isLoading}
+                type="button"
+                onClick={handleGuestLogin}
+                disabled={isLoading || isGuestLoading}
+                className="w-full bg-transparent border border-[#3f3f46] text-[#e5e2e1] text-base font-semibold rounded-lg px-4 py-3 hover:bg-[#201f20] hover:border-[#c8c5ca] active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 group opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:400ms] disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
               >
-                {isLoading ? (
+                {isGuestLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    Sign In
-                    <ArrowRight className="w-5 h-5 opacity-80 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all" />
+                    Masuk sebagai Tamu
+                    <ArrowRight className="w-5 h-5 opacity-80 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all text-[#c8c5ca]" />
                   </>
                 )}
               </button>
-            </form>
+            </div>
           ) : (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-6 h-6 animate-spin text-[#c8c5ca]" />
             </div>
           )}
-
-
 
           {/* Footer Links */}
           <div className="mt-12 flex flex-col gap-4 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:600ms]">
@@ -182,8 +239,6 @@ function LoginContent() {
               A real-time project management platform that eliminates overlapping work. Move your task cards, and let our system update your entire team's screens in milliseconds.
             </p>
           </div>
-
-
         </div>
       </div>
     </div>

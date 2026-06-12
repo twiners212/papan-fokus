@@ -33,7 +33,7 @@ export default async function DashboardPage() {
       <div className="max-w-6xl mx-auto space-y-8">
         
         {/* Header */}
-        <header className="flex items-center justify-between border-b border-border-subtle pb-6">
+        <header className="layout-header flex items-center justify-between border-b border-border-subtle pb-6">
           <div>
             <h1 className="text-2xl md:text-3xl font-headline font-bold text-on-surface">Welcome back, {session.user.name.split(" ")[0]}</h1>
             <p className="text-text-muted mt-1 text-sm md:text-base">Manage your workspaces and projects.</p>

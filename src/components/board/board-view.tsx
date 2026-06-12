@@ -208,6 +208,8 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
   }
 
   const dropAnimation = {
+    duration: 250,
+    easing: "cubic-bezier(0.18, 0.89, 0.32, 1.28)", // Premium bouncy tactile curve
     sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: "0.4" } } })
   };
 
@@ -246,7 +248,7 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
         
         {initialData.role === "admin" && (
           <InviteMemberDialog workspaceId={workspaceId}>
-            <Button variant="outline" size="sm" className="gap-2 bg-surface border-border-subtle text-on-surface hover:bg-surface-container-low hover:text-white transition-colors h-8 shadow-md">
+            <Button variant="outline" size="sm" className="gap-2 bg-surface border-border-subtle text-on-surface hover:bg-surface-container-low hover:text-white transition-colors h-8 shadow-md" aria-label="Undang Tim">
               <UserPlus className="w-4 h-4" />
               <span className="hidden sm:inline">Undang Tim</span>
             </Button>
@@ -265,15 +267,20 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
         <main className="flex-1 overflow-x-auto overflow-y-hidden no-scrollbar bg-canvas p-4 pt-16 h-full relative">
           <div className="flex items-start gap-4 h-full min-w-max pb-4">
             <SortableContext items={columnsId}>
-              {columns.map(column => (
-                <BoardColumn 
-                  key={column.id} 
-                  column={column} 
-                  tasks={tasks.filter(t => t.columnId === column.id)}
-                  onTaskClick={setSelectedTask}
-                  onCreateTask={handleCreateTask}
-                />
-              ))}
+              {columns.map(column => {
+                const isPending = createTaskMutation.isPending && createTaskMutation.variables?.columnId === column.id;
+                return (
+                  <BoardColumn 
+                    key={column.id} 
+                    column={column} 
+                    tasks={tasks.filter(t => t.columnId === column.id)}
+                    onTaskClick={setSelectedTask}
+                    onCreateTask={handleCreateTask}
+                    isPending={isPending}
+                    pendingTaskTitle={createTaskMutation.variables?.title}
+                  />
+                );
+              })}
             </SortableContext>
           </div>
         </main>

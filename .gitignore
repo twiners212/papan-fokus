@@ -53,4 +53,8 @@ node_modules/
 AGENTS.md
 CLAUDE.md
 
-.vercel
+# Temporary & Secret Files
+env-upload.ps1
+test-api.js
+vercel_logs.txt
+*.log

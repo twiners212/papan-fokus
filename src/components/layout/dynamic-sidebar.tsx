@@ -10,7 +10,8 @@ import {
   Settings, 
   CheckCircle2, 
   LogOut,
-  Kanban
+  Kanban,
+  Globe
 } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -39,7 +40,7 @@ export function DynamicSidebar({ dailyActivityCount = 0 }: { dailyActivityCount?
   const activePath = pathname.split("/").pop() || "";
 
   return (
-    <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col bg-surface border-r border-border-subtle z-40 text-on-surface transition-colors duration-200">
+    <aside className="flex h-full w-full flex-col bg-surface text-on-surface transition-colors duration-200">
       {/* AREA ATAS: Selalu Tampil */}
       <div className="p-4 flex flex-col gap-6">
         <div className="flex items-center gap-3 px-2">
@@ -120,6 +121,13 @@ export function DynamicSidebar({ dailyActivityCount = 0 }: { dailyActivityCount?
         )}
 
         <div className="pt-4 border-t border-border-subtle space-y-1 transition-colors duration-200">
+          <Link
+            href="/landing-page"
+            className="flex items-center gap-3 px-3 py-2 text-text-muted hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 rounded-lg"
+          >
+            <Globe className="w-5 h-5" />
+            <span className="text-sm">Landing Page</span>
+          </Link>
           <ThemeToggle />
           <button 
             onClick={handleSignOut}

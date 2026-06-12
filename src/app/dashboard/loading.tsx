@@ -6,7 +6,7 @@ export default function DashboardLoading() {
       <div className="max-w-6xl mx-auto space-y-8">
         
         {/* Header Skeleton */}
-        <header className="flex items-center justify-between border-b border-border-subtle pb-6">
+        <header className="layout-header flex items-center justify-between border-b border-border-subtle pb-6">
           <div className="space-y-2">
             <div className="h-8 w-48 bg-surface-container-high rounded-md animate-pulse"></div>
             <div className="h-4 w-72 bg-surface-container rounded-md animate-pulse"></div>

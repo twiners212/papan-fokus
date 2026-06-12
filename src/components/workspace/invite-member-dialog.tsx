@@ -114,7 +114,7 @@ export function InviteMemberDialog({ workspaceId, children }: { workspaceId: str
                   value={inviteUrl} 
                   className="bg-background border-border-subtle text-text-muted font-mono text-sm"
                 />
-                <Button size="icon" variant="outline" className="shrink-0 border-border-subtle" onClick={handleCopy}>
+                <Button size="icon" variant="outline" className="shrink-0 border-border-subtle" onClick={handleCopy} aria-label={copied ? "Tautan disalin" : "Salin tautan undangan"}>
                   {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
                 </Button>
               </div>

@@ -30,12 +30,12 @@ export default async function WorkspaceSettingsPage({
   return (
     <>
       {/* Header */}
-      <header className="h-[56px] flex items-center justify-between px-4 border-b border-border-subtle bg-background/80 backdrop-blur-sm sticky top-0 z-30 shrink-0">
+      <header className="layout-header h-[56px] flex items-center justify-between px-4 border-b border-border-subtle bg-background/80 backdrop-blur-sm sticky top-0 z-30 shrink-0">
         <div>
           <h1 className="text-xl font-semibold text-on-surface">Workspace Settings</h1>
         </div>
         {/* Mobile Menu Toggle */}
-        <button className="md:hidden p-2 text-text-muted hover:text-on-surface transition-colors">
+        <button className="md:hidden p-2 text-text-muted hover:text-on-surface transition-colors" aria-label="Buka menu navigasi">
           <Menu className="w-6 h-6" />
         </button>
       </header>

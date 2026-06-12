@@ -97,3 +97,52 @@ Tugas komputasi non-kritis (seperti pengiriman email undangan, analitik log, not
 ### 20. Configuration Management: Type-Safe Environment Variables
 Seluruh *environment variable* (terutama parameter vital seperti `DATABASE_URL`, kunci otentikasi, dan kredensial Supabase) wajib divalidasi saat aplikasi pertama kali melakukan *startup* menggunakan **Zod**. Aplikasi dikonfigurasi untuk langsung mogok/gagal *booting* (Fail-Fast) jika konfigurasi wajib tidak tersedia atau tidak valid.
 * **Tujuan:** Mengeliminasi kegagalan senyap (*silent failures*) di lingkungan produksi yang disebabkan oleh kesalahan konfigurasi parameter lingkungan.
+
+---
+
+## Diagram Alir Data (Data Flow Diagram)
+
+Berikut adalah diagram alir interaksi data end-to-end yang mengilustrasikan bagaimana sebuah mutasi (misalnya pembuatan kartu tugas) diproses mulai dari sisi klien hingga ke database, melalui **DAL Guard** untuk isolasi *tenant* dan keamanan.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    
+    actor User as Pengguna (Klien)
+    participant UI as Next.js Client (Browser)
+    participant SA as Server Actions (Node.js)
+    participant Z as Zod Validation Layer
+    participant DAL as DAL Guard (Otorisasi)
+    participant DB as Supabase PostgreSQL
+    participant RT as Supabase Realtime
+    
+    User->>UI: Interaksi UI (Drag/Drop, Form Submit)
+    UI->>UI: Optimistic Update Cache (TanStack Query)
+    UI->>SA: Panggil Server Action
+    
+    SA->>Z: Validasi Skema Payload Input
+    
+    alt Payload Tidak Valid
+        Z-->>SA: Error Validasi
+        SA-->>UI: Return { error: "Invalid Data" }
+        UI->>UI: Rollback Cache UI
+    else Payload Valid
+        SA->>DAL: Teruskan ke Data Access Layer
+    end
+    
+    DAL->>DAL: Verifikasi Sesi & Isolasi Tenant (Better Auth)
+    
+    alt Tidak Sah (Unauthorized)
+        DAL-->>SA: Return { error: "Unauthorized" }
+        SA-->>UI: Return Error & Rollback
+    else Sah (Authorized)
+        DAL->>DB: Eksekusi Kueri/Mutasi (Drizzle ORM)
+    end
+    
+    DB-->>DAL: Transaksi Berhasil
+    DAL-->>SA: Return Data Terbarui
+    SA-->>UI: Resolusi Sukses & Update State Server
+    
+    SA-xRT: Broadcast Event "TASK_UPDATED"
+    RT-->>User: Sinkronisasi Otomatis pada Klien Kolaborator Lain
+```
