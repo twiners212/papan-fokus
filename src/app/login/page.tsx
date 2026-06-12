@@ -74,9 +74,9 @@ function LoginContent() {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-[#09090b] text-[#e5e2e1] selection:bg-[#c8c5ca]/30 selection:text-[#c8c5ca] overflow-x-hidden">
+    <div className="flex min-h-screen w-full bg-[#09090b] text-[#e5e2e1] selection:bg-[#c8c5ca]/30 selection:text-[#c8c5ca] overflow-x-hidden overflow-y-auto">
       {/* Left Column: Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 lg:p-16 relative z-10">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-4 py-8 lg:p-16 relative z-10">
         {/* Ambient background glow */}
         <div className="absolute inset-0 z-0 pointer-events-none flex justify-center items-center opacity-10">
           <div className="w-[500px] h-[500px] bg-[#c8c5ca]/20 rounded-full blur-[100px]"></div>
@@ -84,7 +84,7 @@ function LoginContent() {
 
         <div className="w-full max-w-[400px] relative z-10">
           {/* Brand Header */}
-          <div className="mb-10 flex flex-col items-start gap-4 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards]">
+          <div className="mb-6 md:mb-10 flex flex-col items-start gap-3 md:gap-4 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards]">
             <div className="w-12 h-12 rounded-xl bg-[#201f20] border border-[#3f3f46] flex items-center justify-center shadow-lg">
               <Gauge className="text-[#c8c5ca] w-6 h-6" />
             </div>
@@ -96,8 +96,8 @@ function LoginContent() {
 
           {/* Login Form */}
           {isMounted ? (
-            <div className="flex flex-col gap-6">
-              <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4 md:gap-6">
+              <form className="flex flex-col gap-4 md:gap-6" onSubmit={handleSubmit}>
                 {/* Email Input */}
                 <div className="flex flex-col gap-2 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:100ms]">
                   <label className="text-xs text-[#a1a1aa] uppercase tracking-wider font-semibold" htmlFor="email">
@@ -145,7 +145,7 @@ function LoginContent() {
 
                 {/* Primary Action */}
                 <button
-                  className="w-full bg-[#c8c5ca] text-[#303033] text-base font-semibold rounded-lg px-4 py-3 mt-2 hover:bg-[#e4e1e6] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 group shadow-lg shadow-[#c8c5ca]/20 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:300ms] disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full bg-[#c8c5ca] text-[#303033] text-base font-semibold rounded-lg px-4 py-2.5 md:py-3 mt-2 hover:bg-[#e4e1e6] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 group shadow-lg shadow-[#c8c5ca]/20 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:300ms] disabled:opacity-70 disabled:cursor-not-allowed"
                   type="submit"
                   disabled={isLoading || isGuestLoading}
                 >
@@ -172,7 +172,7 @@ function LoginContent() {
                 type="button"
                 onClick={handleGuestLogin}
                 disabled={isLoading || isGuestLoading}
-                className="w-full bg-transparent border border-[#3f3f46] text-[#e5e2e1] text-base font-semibold rounded-lg px-4 py-3 hover:bg-[#201f20] hover:border-[#c8c5ca] active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 group opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:400ms] disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                className="w-full bg-transparent border border-[#3f3f46] text-[#e5e2e1] text-base font-semibold rounded-lg px-4 py-2.5 md:py-3 hover:bg-[#201f20] hover:border-[#c8c5ca] active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 group opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:400ms] disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
               >
                 {isGuestLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -191,7 +191,7 @@ function LoginContent() {
           )}
 
           {/* Footer Links */}
-          <div className="mt-12 flex flex-col gap-4 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:600ms]">
+          <div className="mt-6 md:mt-12 flex flex-col gap-4 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:600ms]">
             <p className="text-sm text-[#a1a1aa] text-center">
               Don't have an account?{" "}
               <Link href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="text-[#c8c5ca] hover:text-[#e4e1e6] hover:underline transition-colors font-medium">

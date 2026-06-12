@@ -24,10 +24,10 @@ export default async function LandingPage() {
             </span>
           </div>
           <nav className="flex items-center gap-6">
-            <Link href="#features" className="text-sm text-[#a1a1aa] hover:text-[#e5e2e1] transition-colors">
+            <Link href="#features" className="hidden sm:inline-block text-sm text-[#a1a1aa] hover:text-[#e5e2e1] transition-colors">
               Fitur Utama
             </Link>
-            <Link href="#tech" className="text-sm text-[#a1a1aa] hover:text-[#e5e2e1] transition-colors">
+            <Link href="#tech" className="hidden sm:inline-block text-sm text-[#a1a1aa] hover:text-[#e5e2e1] transition-colors">
               Teknologi
             </Link>
             {session ? (
