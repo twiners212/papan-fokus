@@ -24,7 +24,7 @@ vi.mock("@/db", () => {
             },
           },
         };
-        return await cb(mockTx);
+        return await cb(mockTx as never);
       }),
     },
   };
@@ -48,7 +48,8 @@ describe("Column DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "admin",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await createColumn("ws-1", "user-1", { name: "New Col", position: 1000 });
       expect(result).toBeDefined();
@@ -59,7 +60,8 @@ describe("Column DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await createColumn("ws-1", "user-1", { name: "New Col", position: 1000 });
       expect(result).toBeDefined();
@@ -80,7 +82,8 @@ describe("Column DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "admin",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await updateColumn("col-1", "ws-1", "user-1", { name: "Updated" });
       expect(result).toBeDefined();
@@ -101,7 +104,8 @@ describe("Column DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await deleteColumn("col-1", "ws-1", "user-1");
       expect(result).toBeDefined();
@@ -112,7 +116,8 @@ describe("Column DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "admin",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       // Override the mockTx for this specific test
       vi.mocked(db.transaction).mockImplementationOnce(async (cb) => {
@@ -121,7 +126,7 @@ describe("Column DAL", () => {
             tasks: { findFirst: vi.fn().mockResolvedValue({ id: "task-1" }) },
           },
         };
-        return await cb(mockTx as unknown);
+        return await cb(mockTx as never);
       });
 
       await expect(deleteColumn("col-1", "ws-1", "user-1")).rejects.toThrow("Cannot delete column with active tasks");
@@ -132,7 +137,8 @@ describe("Column DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "admin",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       // Override the mockTx for this specific test
       vi.mocked(db.transaction).mockImplementationOnce(async (cb) => {
@@ -142,7 +148,7 @@ describe("Column DAL", () => {
             columns: { findMany: vi.fn().mockResolvedValue([{ id: "col-1" }]) }, // Only 1 column
           },
         };
-        return await cb(mockTx as unknown);
+        return await cb(mockTx as never);
       });
 
       await expect(deleteColumn("col-1", "ws-1", "user-1")).rejects.toThrow("Cannot delete the last column in a workspace");

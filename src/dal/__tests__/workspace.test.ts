@@ -32,7 +32,8 @@ describe("Workspace DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "admin",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await updateWorkspace("ws-1", "user-1", { name: "New Name" });
       expect(result).toEqual({ id: "ws-1", name: "Updated" });
@@ -43,7 +44,8 @@ describe("Workspace DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       await expect(updateWorkspace("ws-1", "user-1", { name: "New Name" })).rejects.toThrow(
         "Only admins can update workspace settings"
@@ -55,7 +57,8 @@ describe("Workspace DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "viewer",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       await expect(updateWorkspace("ws-1", "user-1", { name: "New Name" })).rejects.toThrow(
         "Only admins can update workspace settings"
@@ -69,7 +72,8 @@ describe("Workspace DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "admin",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       await deleteWorkspace("ws-1", "user-1");
       expect(db.delete).toHaveBeenCalled();
@@ -80,7 +84,8 @@ describe("Workspace DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       await expect(deleteWorkspace("ws-1", "user-1")).rejects.toThrow(
         "Only admins can delete the workspace"
@@ -93,7 +98,8 @@ describe("Workspace DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "viewer",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       await expect(deleteWorkspace("ws-1", "user-1")).rejects.toThrow(
         "Only admins can delete the workspace"

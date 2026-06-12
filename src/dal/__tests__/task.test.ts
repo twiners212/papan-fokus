@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createTask, moveTask, updateTask, assignTask, deleteTask, /* unused */ restoreTask } from "../task";
 import * as membership from "../membership";
-import { /* unused */ db } from "@//* unused */ db";
+import { db } from "@/db";
 
-vi.mock("@//* unused */ db", () => {
+vi.mock("@/db", () => {
   return {
-    /* unused */ db: {
+    db: {
       transaction: vi.fn(async (cb) => {
         const mockTx = {
           insert: vi.fn().mockReturnThis(),
@@ -59,7 +59,8 @@ describe("Task DAL", () => {
         workspaceId: "ws-1",
         userId: "user-1",
         role: "admin",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await createTask("ws-1", "user-1", { title: "New", columnId: "col-1", position: 1000 });
       expect(result).toBeDefined();
@@ -80,7 +81,8 @@ describe("Task DAL", () => {
         workspaceId: "ws-1",
         userId: "user-admin",
         role: "admin",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await moveTask("task-1", "ws-1", "user-admin", { columnId: "col-2", position: 2000 });
       expect(result).toBeDefined();
@@ -91,7 +93,8 @@ describe("Task DAL", () => {
         workspaceId: "ws-1",
         userId: "user-creator",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await moveTask("task-1", "ws-1", "user-creator", { columnId: "col-2", position: 2000 });
       expect(result).toBeDefined();
@@ -102,7 +105,8 @@ describe("Task DAL", () => {
         workspaceId: "ws-1",
         userId: "user-other",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       await expect(moveTask("task-1", "ws-1", "user-other", { columnId: "col-2", position: 2000 })).rejects.toThrow(
         "Unauthorized: Only the task creator, assignee, or admin can move this task"
@@ -116,7 +120,8 @@ describe("Task DAL", () => {
         workspaceId: "ws-1",
         userId: "user-assignee",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       await expect(updateTask("task-1", "ws-1", "user-assignee", { priority: "high" })).rejects.toThrow(
         "Unauthorized: Only admin or task creator can edit priority"
@@ -128,7 +133,8 @@ describe("Task DAL", () => {
         workspaceId: "ws-1",
         userId: "user-assignee",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await updateTask("task-1", "ws-1", "user-assignee", { description: "New desc" });
       expect(result).toBeDefined();
@@ -141,7 +147,8 @@ describe("Task DAL", () => {
         workspaceId: "ws-1",
         userId: "user-admin",
         role: "admin",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       const result = await assignTask("task-1", "ws-1", "user-admin", "user-new");
       expect(result).toBeDefined();
@@ -152,7 +159,8 @@ describe("Task DAL", () => {
         workspaceId: "ws-1",
         userId: "user-assignee",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       await expect(assignTask("task-1", "ws-1", "user-assignee", "user-new")).rejects.toThrow(
         "Unauthorized: Only the task creator or admin can assign this task"
@@ -166,7 +174,8 @@ describe("Task DAL", () => {
         workspaceId: "ws-1",
         userId: "user-assignee",
         role: "member",
-      } as unknown);
+        joinedAt: new Date(),
+      });
 
       await expect(deleteTask("task-1", "ws-1", "user-assignee")).rejects.toThrow(
         "Unauthorized: Only the task creator or admin can delete this task"
