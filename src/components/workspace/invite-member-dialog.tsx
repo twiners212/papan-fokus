@@ -30,7 +30,7 @@ export function InviteMemberDialog({ workspaceId, children }: { workspaceId: str
       return;
     }
 
-    if (result.data) {
+    if ("data" in result && result.data) {
       const url = `${window.location.origin}/invite?token=${result.data.token}`;
       setInviteUrl(url);
       toast.success("Tautan undangan berhasil dibuat!");

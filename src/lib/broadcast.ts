@@ -12,11 +12,10 @@ export async function broadcastBoardUpdate(workspaceId: string) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    await supabase.channel(`workspace:${workspaceId}`).send({
-      type: "broadcast",
-      event: "BOARD_UPDATED",
-      payload: { timestamp: Date.now() },
-    });
+    await supabase.channel(`workspace:${workspaceId}`).httpSend(
+      "BOARD_UPDATED",
+      { timestamp: Date.now() }
+    );
   } catch (error) {
     console.error("Failed to broadcast board update:", error);
   }

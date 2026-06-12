@@ -42,10 +42,9 @@ export async function joinWorkspaceViaLinkAction(token: unknown) {
   
   if (result.success && 'data' in result && result.data && !result.data.existing) {
     // Broadcast event to realtime channel
-    supabaseAdmin.channel(`workspace:${result.data.workspaceId}`).send({
-      type: "broadcast",
-      event: "MEMBER_JOINED",
-      payload: {
+    supabaseAdmin.channel(`workspace:${result.data.workspaceId}`).httpSend(
+      "MEMBER_JOINED",
+      {
         version: 1,
         eventId: crypto.randomUUID(),
         workspaceId: result.data.workspaceId,
@@ -54,7 +53,7 @@ export async function joinWorkspaceViaLinkAction(token: unknown) {
         payload: { userId: session.user.id },
         timestamp: new Date().toISOString(),
       }
-    });
+    );
   }
 
   return result;
