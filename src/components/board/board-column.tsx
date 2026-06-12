@@ -86,13 +86,13 @@ export function BoardColumn({ column, tasks, onTaskClick, onCreateTask, isPendin
     <div 
       ref={setNodeRef} 
       style={style} 
-      className="w-[320px] flex flex-col h-full bg-surface-container-low rounded-xl border border-border-subtle overflow-hidden shrink-0"
+      className="w-[320px] flex flex-col h-full bg-surface-container-low rounded-xl border border-border-subtle overflow-hidden shrink-0 snap-center md:snap-align-none"
     >
       {/* Column Header */}
       <div 
         {...attributes} 
         {...listeners} 
-        className="sticky top-0 bg-surface-container-low/95 backdrop-blur px-4 py-3 border-b border-border-subtle flex items-center justify-between z-10 cursor-grab active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded-t-xl"
+        className="sticky top-0 bg-surface-container-low/95 backdrop-blur px-4 py-2 md:py-3 border-b border-border-subtle flex items-center justify-between z-10 cursor-grab active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded-t-xl"
       >
         <div className="flex items-center gap-2 pointer-events-none">
           <span className="w-2 h-2 rounded-full bg-primary"></span>
@@ -102,7 +102,7 @@ export function BoardColumn({ column, tasks, onTaskClick, onCreateTask, isPendin
           </span>
         </div>
         <button 
-          className="text-text-muted hover:text-on-surface transition-colors cursor-pointer"
+          className="w-11 h-11 sm:w-8 sm:h-8 flex items-center justify-center text-text-muted hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer rounded-lg"
           onPointerDown={(e) => e.stopPropagation()} // Prevent drag when clicking button
           onClick={() => setIsCreating(true)}
           aria-label={`Tambah tugas di kolom ${column.name}`}
@@ -112,7 +112,7 @@ export function BoardColumn({ column, tasks, onTaskClick, onCreateTask, isPendin
       </div>
 
       {/* Task List */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto p-2.5 md:p-3 space-y-2.5 md:space-y-3 custom-scrollbar">
         <SortableContext items={tasksIds}>
           <AnimatePresence initial={false}>
             {tasks.map((task) => (

@@ -7,7 +7,8 @@ import {
   DragOverlay, 
   closestCorners, 
   KeyboardSensor, 
-  PointerSensor, 
+  MouseSensor, 
+  TouchSensor, 
   useSensor, 
   useSensors,
   DragStartEvent,
@@ -52,13 +53,25 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
   const [activeTask, setActiveTask] = useState<any | null>(null);
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
 
+  const [activeColumnIndex, setActiveColumnIndex] = useState(0);
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const { scrollLeft } = scrollContainerRef.current;
+    // Each column is 320px, gap is 16px (stride is 336px)
+    const index = Math.round(scrollLeft / 336);
+    setActiveColumnIndex(Math.max(0, Math.min(columns.length - 1, index)));
+  };
+
   // Sync local state when query data changes (e.g. from realtime or mutations)
   React.useEffect(() => {
     setTasks(data.tasks);
   }, [data.tasks]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -225,9 +238,9 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
   const progressValue = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
 
   return (
-    <>
+    <div className="flex-grow flex flex-col h-full overflow-hidden relative">
       {/* Presence Header & Actions */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-4">
+      <div className="absolute top-2 md:top-4 right-4 z-20 flex items-center gap-2 md:gap-4">
         {/* Progress Bar Widget */}
         <div className="hidden sm:flex flex-col gap-1.5 w-32 md:w-48 bg-surface-container/80 backdrop-blur-sm p-2 rounded-lg border border-border-subtle shadow-sm">
           <div className="flex justify-between items-center text-xs text-text-muted font-medium">
@@ -248,7 +261,7 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
         
         {initialData.role === "admin" && (
           <InviteMemberDialog workspaceId={workspaceId}>
-            <Button variant="outline" size="sm" className="gap-2 bg-surface border-border-subtle text-on-surface hover:bg-surface-container-low hover:text-white transition-colors h-8 shadow-md" aria-label="Undang Tim">
+            <Button variant="outline" size="sm" className="gap-2 bg-surface border-border-subtle text-on-surface hover:bg-surface-container-low hover:text-white transition-colors h-11 sm:h-8 px-4 sm:px-3 shadow-md" aria-label="Undang Tim">
               <UserPlus className="w-4 h-4" />
               <span className="hidden sm:inline">Undang Tim</span>
             </Button>
@@ -264,7 +277,11 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
       >
-        <main className="flex-1 overflow-x-auto overflow-y-hidden no-scrollbar bg-canvas p-4 pt-16 h-full relative">
+        <main 
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="flex-grow overflow-x-auto overflow-y-hidden no-scrollbar bg-canvas p-4 pt-12 md:pt-16 h-full relative snap-x snap-mandatory scroll-smooth"
+        >
           <div className="flex items-start gap-4 h-full min-w-max pb-4">
             <SortableContext items={columnsId}>
               {columns.map(column => {
@@ -290,6 +307,40 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
         </DragOverlay>
       </DndContext>
 
+      {/* Mobile Page Indicator Dots */}
+      {columns.length > 0 && (
+        <div className="flex md:hidden justify-center items-center py-1 bg-canvas border-t border-border-subtle shrink-0">
+          {columns.map((col, idx) => (
+            <button
+              key={col.id}
+              onClick={() => {
+                if (scrollContainerRef.current) {
+                  const cols = scrollContainerRef.current.querySelectorAll(".snap-center");
+                  const targetCol = cols[idx];
+                  if (targetCol) {
+                    targetCol.scrollIntoView({
+                      behavior: "smooth",
+                      block: "nearest",
+                      inline: "center",
+                    });
+                  }
+                }
+              }}
+              className="w-11 h-11 flex items-center justify-center cursor-pointer focus-visible:outline-none"
+              aria-label={`Pindah ke kolom ${col.name}`}
+            >
+              <span
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  idx === activeColumnIndex 
+                    ? "w-6 bg-primary" 
+                    : "w-1.5 bg-text-muted/30"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
       <TaskDetailDrawer 
         task={selectedTask} 
         onClose={() => setSelectedTask(null)} 
@@ -298,6 +349,6 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
         userRole={initialData.role}
         columns={columns}
       />
-    </>
+    </div>
   );
 }
