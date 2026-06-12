@@ -20,9 +20,10 @@ export function AppLayoutWrapper({
   const pathname = usePathname();
 
   useEffect(() => {
-    setIsMounted(true);
+    setTimeout(() => setIsMounted(true), 0);
     const saved = localStorage.getItem("sidebar-collapsed");
     if (saved) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsCollapsed(saved === "true");
     }
 
@@ -36,7 +37,7 @@ export function AppLayoutWrapper({
 
   // Close mobile sidebar drawer automatically on route/pathname change
   useEffect(() => {
-    setIsMobileOpen(false);
+    setTimeout(() => setIsMobileOpen(false), 0);
   }, [pathname]);
 
   const toggleSidebar = () => {

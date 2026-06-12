@@ -3,7 +3,7 @@ import { env } from "@/env";
 import { SignJWT } from "jose";
 import { headers } from "next/headers";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),

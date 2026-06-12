@@ -82,7 +82,7 @@ export function BoardTask({ task, isOverlay, onClick }: BoardTaskProps) {
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           e.preventDefault();
-          onClick && onClick(task);
+          if (onClick) onClick(task);
         }
       }}
       className={`bg-surface rounded-lg p-2.5 md:p-3 border border-border-subtle hover:border-outline-variant focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 cursor-grab active:cursor-grabbing group transition-all duration-150 ${isOverlay ? 'shadow-[0_8px_30px_rgb(0,0,0,0.4)] scale-[1.02] z-50 ring-2 ring-primary' : ''}`}

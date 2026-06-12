@@ -24,8 +24,9 @@ export async function ensureGuestUserAction() {
     }
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error ensuring guest user:", error);
-    return { success: false, error: error.message || "Failed to prepare guest account" };
+    const message = error instanceof Error ? error.message : "Failed to prepare guest account";
+    return { success: false, error: message };
   }
 }

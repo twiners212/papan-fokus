@@ -30,8 +30,8 @@ export async function createInviteLink(
       .returning();
 
     return { success: true, data: inviteLink };
-  } catch (error: any) {
-    return { success: false, error: error.message || "Failed to create invite link" };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Failed to create invite link" };
   }
 }
 
@@ -122,7 +122,7 @@ export async function joinWorkspaceViaLink(token: string, userId: string) {
 
       return { success: true, data: { workspaceId: link.workspaceId, slug: workspace.slug, existing: false } };
     });
-  } catch (error: any) {
-    return { success: false, error: error.message || "Gagal bergabung ke workspace" };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Gagal bergabung ke workspace" };
   }
 }

@@ -13,7 +13,7 @@ export function useRealtimeBoard(workspaceId: string, currentUserId: string) {
   const [activeUsers, setActiveUsers] = useState<PresenceUser[]>([]);
 
   useEffect(() => {
-    let channel: any;
+    let channel: import("@supabase/supabase-js").RealtimeChannel;
     let isMounted = true;
 
     async function initRealtime() {
@@ -46,15 +46,15 @@ export function useRealtimeBoard(workspaceId: string, currentUserId: string) {
             const users: PresenceUser[] = [];
             for (const id in newState) {
               // Get the first presence instance for this user
-              const presence = newState[id][0] as PresenceUser;
+              const presence = newState[id][0] as unknown as PresenceUser;
               users.push({ userId: id, onlineAt: presence.onlineAt });
             }
             setActiveUsers(users);
           })
-          .on("presence", { event: "join" }, ({ key, newPresences }) => {
+          .on("presence", { event: "join" }, () => {
             // join handled
           })
-          .on("presence", { event: "leave" }, ({ key, leftPresences }) => {
+          .on("presence", { event: "leave" }, () => {
             // leave handled
           })
           .on("broadcast", { event: "BOARD_UPDATED" }, () => {
@@ -67,7 +67,7 @@ export function useRealtimeBoard(workspaceId: string, currentUserId: string) {
             queryClient.clear();
             window.location.href = "/dashboard";
           })
-          .subscribe(async (status, err) => {
+          .subscribe(async (status) => {
             if (status === "SUBSCRIBED") {
               await channel.track({
                 userId: currentUserId,

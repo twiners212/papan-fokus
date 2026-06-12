@@ -91,9 +91,9 @@ export function BoardEmptyState({ workspaceId }: { workspaceId: string }) {
       await createColumnAction(workspaceId, { name: "Done", position: 3000 });
       toast.success("Default columns generated successfully!");
       queryClient.invalidateQueries({ queryKey: ["board", workspaceId] });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      toast.error(error.message || "Failed to create columns");
+      toast.error(error instanceof Error ? error.message : "Failed to create columns");
     } finally {
       setIsCreating(false);
     }
@@ -105,9 +105,9 @@ export function BoardEmptyState({ workspaceId }: { workspaceId: string }) {
       await generateDummyDataAction(workspaceId);
       toast.success("Workspace populated with dummy data successfully!");
       queryClient.invalidateQueries({ queryKey: ["board", workspaceId] });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      toast.error(error.message || "Failed to seed dummy data");
+      toast.error(error instanceof Error ? error.message : "Failed to seed dummy data");
     } finally {
       setIsSeeding(false);
     }

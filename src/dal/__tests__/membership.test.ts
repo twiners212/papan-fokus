@@ -22,7 +22,7 @@ describe("DAL Tenant Isolation Guard (verifyWorkspaceMembership)", () => {
 
   it("should return member if user is part of the workspace", async () => {
     const mockMember = { workspaceId: "ws-1", userId: "user-1", role: "member" };
-    // @ts-ignore
+    // @ts-expect-error fix me later
     db.query.workspaceMembers.findFirst.mockResolvedValueOnce(mockMember);
 
     const result = await verifyWorkspaceMembership("ws-1", "user-1");
@@ -31,7 +31,7 @@ describe("DAL Tenant Isolation Guard (verifyWorkspaceMembership)", () => {
   });
 
   it("should throw error if user is NOT part of the workspace (Cross-Tenant Access)", async () => {
-    // @ts-ignore
+    // @ts-expect-error fix me later
     db.query.workspaceMembers.findFirst.mockResolvedValueOnce(null);
 
     await expect(verifyWorkspaceMembership("ws-1", "user-2")).rejects.toThrow(
@@ -43,7 +43,7 @@ describe("DAL Tenant Isolation Guard (verifyWorkspaceMembership)", () => {
 describe("DAL Role Guard (verifyWorkspaceAdmin)", () => {
   it("should return member if user is admin", async () => {
     const mockMember = { workspaceId: "ws-1", userId: "user-1", role: "admin" };
-    // @ts-ignore
+    // @ts-expect-error fix me later
     db.query.workspaceMembers.findFirst.mockResolvedValueOnce(mockMember);
 
     const result = await verifyWorkspaceAdmin("ws-1", "user-1");
@@ -52,7 +52,7 @@ describe("DAL Role Guard (verifyWorkspaceAdmin)", () => {
 
   it("should throw error if user is only a viewer/member", async () => {
     const mockMember = { workspaceId: "ws-1", userId: "user-1", role: "viewer" };
-    // @ts-ignore
+    // @ts-expect-error fix me later
     db.query.workspaceMembers.findFirst.mockResolvedValueOnce(mockMember);
 
     await expect(verifyWorkspaceAdmin("ws-1", "user-1")).rejects.toThrow(

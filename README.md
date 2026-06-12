@@ -36,8 +36,8 @@ Berbeda dengan aplikasi Kanban sederhana, PapanFokus dibangun dengan arsitektur 
 ### Desktop Workspace View
 ![PapanFokus Kanban Board](public/screenshot-board.png)
 
-### Responsive Mobile View
-<img src="public/screenshot-mobile.png" width="375" alt="PapanFokus Mobile View" />
+### Responsive Mobile View (Optimized Drawer UX)
+<img src="public/screenshot-mobile.png" width="320" alt="PapanFokus Mobile View" />
 
 ---
 
@@ -47,7 +47,7 @@ Berbeda dengan aplikasi Kanban sederhana, PapanFokus dibangun dengan arsitektur 
 - **🔒 Multi-Tenant Isolation:** Setiap *workspace* diisolasi secara ketat. Pengguna hanya dapat mengakses data workspace tempat mereka terdaftar melalui validasi berlapis (Database RLS + Server Guard).
 - **🛡️ Role-Based Access Control (RBAC):** Peran granular untuk **Admin** (pemilik/pengelola), **Member** (kolaborator aktif), dan **Viewer** (hanya lihat) untuk memastikan keamanan operasional.
 - **🧮 Fractional Positioning Algorithm:** Pengurutan posisi kartu menggunakan nilai desimal dinamis untuk mencegah collision/pergeseran posisi saat beberapa pengguna memindahkan kartu secara bersamaan.
-- **📱 Responsive & Modern UI:** Antarmuka gelap (*dark mode*) yang premium menggunakan Tailwind CSS, Shadcn/ui, dan transisi mikro-animasi yang halus.
+- **📱 Responsive & Modern UI (Mobile Optimized):** Antarmuka gelap (*dark mode*) premium menggunakan Tailwind CSS, Shadcn/ui, dan transisi mikro-animasi yang halus. Dioptimalkan penuh untuk perangkat mobile dengan layout Kanban horizontal-scroll dan panel detail tugas side-sheet (`w-[85vw]`) yang ramah usabilitas.
 - **🧪 E2E Tested:** Dilengkapi dengan pengujian otomatis *end-to-end* menggunakan Playwright untuk menjaga stabilitas alur kerja Kanban.
 
 ---

@@ -15,8 +15,8 @@ export default async function BoardPage({ params }: { params: Promise<{ slug: st
   let initialData;
   try {
     initialData = await getBoardDataAction(slug);
-  } catch (error: any) {
-    if (error.message === "Workspace not found") {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message === "Workspace not found") {
       initialData = null;
     } else {
       throw error;

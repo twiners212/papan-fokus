@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Plus, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { 
   DndContext, 
   DragOverlay, 
@@ -35,6 +35,7 @@ import { BoardEmptyState } from "./board-empty-state";
 import { Progress } from "@/components/ui/progress";
 
 type InitialData = Awaited<ReturnType<typeof getBoardDataAction>>;
+type TaskType = InitialData["tasks"][0];
 
 export function BoardView({ initialData, currentUserId }: { initialData: InitialData, currentUserId: string }) {
   const queryClient = useQueryClient();
@@ -50,8 +51,8 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
 
   const columns = data.columns;
   const [tasks, setTasks] = useState(data.tasks); // Local state for optimistic UI during drag
-  const [activeTask, setActiveTask] = useState<any | null>(null);
-  const [selectedTask, setSelectedTask] = useState<any | null>(null);
+  const [activeTask, setActiveTask] = useState<TaskType | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
 
   const [activeColumnIndex, setActiveColumnIndex] = useState(0);
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
@@ -66,7 +67,7 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
 
   // Sync local state when query data changes (e.g. from realtime or mutations)
   React.useEffect(() => {
-    setTasks(data.tasks);
+    setTimeout(() => setTasks(data.tasks), 0);
   }, [data.tasks]);
 
   const sensors = useSensors(
@@ -78,9 +79,9 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
   const moveTaskMutation = useMutation({
     mutationFn: (args: { taskId: string; columnId: string; position: number }) => 
       moveTaskAction(args.taskId, workspaceId, { columnId: args.columnId, position: args.position }),
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast.error("Gagal Memindahkan Task", {
-        description: error.message || "Terjadi kesalahan yang tidak diketahui.",
+        description: error instanceof Error ? error.message : "Terjadi kesalahan yang tidak diketahui.",
       });
       setTasks(data.tasks); // Rollback
     },
@@ -176,7 +177,6 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
     if (!over) return;
 
     const activeId = active.id as string;
-    const overId = over.id as string;
 
     const isActiveTask = active.data.current?.type === "Task";
     if (!isActiveTask) return;
@@ -291,7 +291,7 @@ export function BoardView({ initialData, currentUserId }: { initialData: Initial
                     key={column.id} 
                     column={column} 
                     tasks={tasks.filter(t => t.columnId === column.id)}
-                    onTaskClick={setSelectedTask}
+                    onTaskClick={(task) => setSelectedTask(task as TaskType)}
                     onCreateTask={handleCreateTask}
                     isPending={isPending}
                     pendingTaskTitle={createTaskMutation.variables?.title}

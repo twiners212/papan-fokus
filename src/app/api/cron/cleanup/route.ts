@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
   try {
     // Clean up expired sessions (older than current date)
-    const result = await db.delete(sessions).where(lt(sessions.expiresAt, new Date()));
+    await db.delete(sessions).where(lt(sessions.expiresAt, new Date()));
     
     return NextResponse.json({ 
       success: true, 

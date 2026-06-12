@@ -12,7 +12,7 @@ export async function GET() {
       database: "connected",
       timestamp: new Date().toISOString(),
     }, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({
       status: "degraded",
       database: "unreachable",

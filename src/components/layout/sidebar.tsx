@@ -10,10 +10,8 @@ import {
   Users, 
   BarChart3, 
   Settings, 
-  Plus, 
-  HelpCircle, 
-  LogOut,
-  Kanban
+  Kanban,
+  LogOut
 } from "lucide-react";
 
 export function Sidebar({ currentSlug, dailyActivityCount = 0 }: { currentSlug: string; dailyActivityCount?: number }) {
@@ -91,7 +89,7 @@ export function Sidebar({ currentSlug, dailyActivityCount = 0 }: { currentSlug: 
         
         {/* Daily Activity Widget */}
         <div className="px-3 py-3 bg-[#353435]/50 rounded-lg border border-[#3f3f46]">
-          <p className="text-xs font-mono text-[#a1a1aa] mb-1">Today's Activity</p>
+          <p className="text-xs font-mono text-[#a1a1aa] mb-1">Today&apos;s Activity</p>
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-[#3b82f6]" />
             <span className="text-sm font-medium text-[#e5e2e1]">{dailyActivityCount} tugas selesai hari ini</span>

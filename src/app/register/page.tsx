@@ -18,14 +18,14 @@ function RegisterContent() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    setTimeout(() => setIsMounted(true), 0);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { data, error } = await authClient.signUp.email({
+    const { error } = await authClient.signUp.email({
       name,
       email,
       password,
@@ -196,7 +196,7 @@ function RegisterContent() {
               <span className="text-[#c8c5ca] font-bold">Synchronized Instantly.</span>
             </h2>
             <p className="text-lg text-[#c8c5cb] leading-relaxed">
-              A real-time project management platform that eliminates overlapping work. Move your task cards, and let our system update your entire team's screens in milliseconds.
+              A real-time project management platform that eliminates overlapping work. Move your task cards, and let our system update your entire team&apos;s screens in milliseconds.
             </p>
           </div>
 

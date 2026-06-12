@@ -60,7 +60,7 @@ export default async function DashboardPage() {
               </div>
               <h3 className="text-xl font-headline text-on-surface mb-2">No workspaces yet</h3>
               <p className="text-text-muted mb-8 max-w-md text-sm md:text-base">
-                You haven't joined any workspaces. Create your first workspace to start collaborating with your team.
+                You haven&apos;t joined any workspaces. Create your first workspace to start collaborating with your team.
               </p>
               <CreateWorkspaceDialog />
             </div>

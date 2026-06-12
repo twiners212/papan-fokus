@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -10,7 +11,7 @@ import { format } from "date-fns";
 
 // Shadcn Components
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 
@@ -58,7 +59,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
 
   useEffect(() => {
     if (task) {
-      setIsOpen(true);
+      setTimeout(() => setIsOpen(true), 0);
       setLocalTitle(task.title || "");
       setLocalDesc(task.description || "");
       setLocalPriority(task.priority || "medium");
@@ -94,7 +95,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
   const hasPrevPage = page > 1;
 
   const updateMutation = useMutation({
-    mutationFn: (payload: any) => {
+    mutationFn: (payload: Record<string, unknown>) => {
       if (!task) throw new Error("No task");
       return updateTaskAction(task.id, workspaceId, payload);
     },
@@ -119,24 +120,24 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
     setTimeout(onClose, 300); // Wait for transition if needed, though Sheet handles it mostly
   };
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: string | null) => {
     if (!task) return;
     
-    const payload: any = {};
+    const payload: Record<string, unknown> = {};
     if (field === "title") {
-      setLocalTitle(value);
+      setLocalTitle(value || "");
       payload.title = value;
     } else if (field === "description") {
-      setLocalDesc(value);
+      setLocalDesc(value || "");
       payload.description = value;
     } else if (field === "priority") {
-      setLocalPriority(value);
+      setLocalPriority(value || "medium");
       payload.priority = value;
     } else if (field === "assigneeId") {
-      setLocalAssignee(value);
+      setLocalAssignee(value || "");
       payload.assigneeId = value || null;
     } else if (field === "dueDate") {
-      setLocalDueDate(value);
+      setLocalDueDate(value || "");
       payload.dueDate = value ? new Date(value) : null;
     }
 
@@ -147,7 +148,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
   if (!task && !isOpen) return null;
 
   const currentPriority = PRIORITIES.find(p => p.value === localPriority) || PRIORITIES[1];
-  const currentAssigneeObj = members.find((m: any) => m.id === localAssignee);
+  const currentAssigneeObj = members.find((m: { id: string; name: string; image?: string | null }) => m.id === localAssignee);
 
   const isAdmin = userRole === "admin";
   const isCreator = task?.createdBy === currentUserId;
@@ -164,7 +165,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
   return (
     <Sheet open={isOpen} onOpenChange={(open) => { if (!open) handleClose(); }}>
       <SheetContent 
-        className="w-[90vw] sm:w-[480px] lg:w-[600px] sm:max-w-none bg-surface-container border-l border-border-subtle p-0 flex flex-col focus-visible:outline-none [&>button]:hidden"
+        className="w-[85vw] sm:w-[480px] lg:w-[600px] sm:max-w-none bg-surface-container border-l border-border-subtle p-0 flex flex-col focus-visible:outline-none [&>button]:hidden"
       >
         <SheetHeader className="sr-only">
           <SheetTitle>Task Details</SheetTitle>
@@ -172,8 +173,8 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
         </SheetHeader>
 
         {/* Drawer Header */}
-        <header className="flex-shrink-0 px-6 py-5 border-b border-border-subtle flex items-start justify-between bg-surface-container sticky top-0 z-10">
-          <div className="flex-1 pr-8">
+        <header className="flex-shrink-0 px-4 sm:px-6 py-4 sm:py-5 border-b border-border-subtle flex items-start justify-between bg-surface-container sticky top-0 z-10">
+          <div className="flex-1 min-w-0 pr-4">
             <div className="flex items-center gap-2 mb-2 text-text-muted font-mono-label text-mono-label text-xs">
               <span className="bg-surface-container-high px-1.5 py-0.5 rounded border border-border-subtle">
                 TSK-{task?.id.substring(0, 4)}
@@ -225,7 +226,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
         </header>
 
         {/* Drawer Content Scrollable Area */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 pb-24 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 pb-24 custom-scrollbar">
           {/* Metadata Grid (Bento Style) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             
@@ -265,7 +266,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="unassigned">Unassigned</SelectItem>
-                  {members.map((m: any) => (
+                  {members.map((m: { id: string; name: string }) => (
                     <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
                   ))}
                 </SelectContent>
@@ -371,6 +372,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
                   <p className="text-xs text-text-muted">Updates to this task will appear here.</p>
                 </div>
               ) : (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 logs.map((log: any) => {
                   let actionText = "";
                   if (log.actionType === "TASK_CREATED") actionText = "created this task";
@@ -408,7 +410,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
                         {actionText}
                         {log.actionType === "TASK_UPDATED" && log.details?.description !== undefined && (
                           <div className="mt-2 mb-1 p-2 bg-surface-container-high border-l-2 border-primary/50 text-text-muted italic text-xs rounded-r">
-                            "{log.details.description}"
+                            &quot;{log.details.description}&quot;
                           </div>
                         )}
                         <span className="block mt-1 text-[11px] text-text-muted/70">

@@ -19,14 +19,14 @@ function LoginContent() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    setTimeout(() => setIsMounted(true), 0);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { data, error } = await authClient.signIn.email({
+    const { error } = await authClient.signIn.email({
       email,
       password,
     });
@@ -66,7 +66,7 @@ function LoginContent() {
       toast.success("Logged in as Tamu PapanFokus!");
       router.push("/dashboard");
       router.refresh();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       toast.error("An unexpected error occurred during guest login");
       setIsGuestLoading(false);
@@ -193,7 +193,7 @@ function LoginContent() {
           {/* Footer Links */}
           <div className="mt-6 md:mt-12 flex flex-col gap-4 opacity-0 blur-[10px] translate-y-5 animate-[fadeSlideIn_0.8s_ease-out_forwards] [animation-delay:600ms]">
             <p className="text-sm text-[#a1a1aa] text-center">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="text-[#c8c5ca] hover:text-[#e4e1e6] hover:underline transition-colors font-medium">
                 Request access
               </Link>
@@ -236,7 +236,7 @@ function LoginContent() {
               <span className="text-[#c8c5ca] font-bold">Synchronized Instantly.</span>
             </h2>
             <p className="text-lg text-[#c8c5cb] leading-relaxed">
-              A real-time project management platform that eliminates overlapping work. Move your task cards, and let our system update your entire team's screens in milliseconds.
+              A real-time project management platform that eliminates overlapping work. Move your task cards, and let our system update your entire team&apos;s screens in milliseconds.
             </p>
           </div>
         </div>

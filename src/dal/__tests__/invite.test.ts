@@ -17,7 +17,7 @@ vi.mock("@/db", () => {
           }])
           .mockResolvedValueOnce([]);
 
-        const mockTx: any = {
+        const mockTx: unknown = {
           select: vi.fn().mockReturnThis(),
           from: vi.fn().mockReturnThis(),
           innerJoin: vi.fn().mockReturnThis(),
@@ -31,7 +31,7 @@ vi.mock("@/db", () => {
 
         mockTx.where = vi.fn().mockImplementation(() => ({
           limit: mockLimit,
-          then: function(resolve: any) { resolve([{ count: 5 }]); }
+          then: function(resolve: unknown) { resolve([{ count: 5 }]); }
         }));
 
         return await cb(mockTx);
@@ -57,7 +57,7 @@ describe("Invite DAL", () => {
         workspaceId: "ws-1",
         userId: "user-admin",
         role: "admin",
-      } as any);
+      } as unknown);
 
       const result = await createInviteLink("user-admin", {
         workspaceId: "ws-1",
@@ -90,11 +90,11 @@ describe("Invite DAL", () => {
   describe("joinWorkspaceViaLink", () => {
     it("should allow a user to join via a valid link", async () => {
       const result = await joinWorkspaceViaLink("tok_123", "user-new");
-      if (!result.success) console.log((result as any).error);
+      if (!result.success) console.log((result as unknown).error);
       expect(result.success).toBe(true);
       if (result.success) {
-        expect((result as any).data.workspaceId).toBe("ws-1");
-        expect((result as any).data.existing).toBe(false);
+        expect((result as unknown).data.workspaceId).toBe("ws-1");
+        expect((result as unknown).data.existing).toBe(false);
       }
     });
 
@@ -111,13 +111,13 @@ describe("Invite DAL", () => {
             workspace: { id: "ws-1", slug: "ws-test" } 
           }]),
         };
-        return await cb(mockTx as any);
+        return await cb(mockTx as unknown);
       });
 
       const result = await joinWorkspaceViaLink("tok_123", "user-new");
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect((result as any).error).toBe("Kapasitas tautan undangan sudah penuh");
+        expect((result as unknown).error).toBe("Kapasitas tautan undangan sudah penuh");
       }
     });
   });

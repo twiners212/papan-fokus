@@ -112,7 +112,7 @@ export function DynamicSidebar({ dailyActivityCount = 0 }: { dailyActivityCount?
       <div className="mt-auto p-4 space-y-4">
         {inWorkspace && (
           <div className="px-3 py-3 bg-surface-container/50 rounded-lg border border-border-subtle transition-colors duration-200">
-            <p className="text-xs font-mono text-text-muted mb-1 transition-colors duration-200">Today's Activity</p>
+            <p className="text-xs font-mono text-text-muted mb-1 transition-colors duration-200">Today&apos;s Activity</p>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-blue-500" />
               <span className="text-sm font-medium text-on-surface transition-colors duration-200">{dailyActivityCount} tugas selesai hari ini</span>

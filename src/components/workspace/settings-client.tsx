@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Upload, Trash2, Shield, User, Loader2 } from "lucide-react";
+import { Upload, Loader2 } from "lucide-react";
 import { updateWorkspaceSettingsAction, deleteWorkspaceAction } from "@/actions/workspace-settings-actions";
 import { supabase } from "@/lib/supabase-client";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -19,9 +18,9 @@ import {
 } from "@/components/ui/dialog";
 
 interface SettingsClientProps {
-  workspace: any;
+  workspace: { id: string; name: string; logoUrl?: string | null };
   currentUserRole: string;
-  members: any[];
+  members: Record<string, unknown>[]; // eslint-disable-line @typescript-eslint/no-unused-vars
   user: { id: string; name: string; image?: string | null };
 }
 
@@ -60,8 +59,8 @@ export function SettingsClient({ workspace, currentUserRole, members, user }: Se
       await updateWorkspaceSettingsAction(workspace.id, { name: workspaceName });
       toast.success("Workspace name updated");
       router.refresh();
-    } catch (err: any) {
-      toast.error(err.message || "Failed to update workspace name");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to update workspace name");
       setWorkspaceName(workspace.name); // Revert
     } finally {
       setIsUpdatingName(false);
@@ -82,8 +81,8 @@ export function SettingsClient({ workspace, currentUserRole, members, user }: Se
       await deleteWorkspaceAction(workspace.id);
       toast.success("Workspace deleted");
       router.push("/dashboard");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to delete workspace");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to delete workspace");
       setIsDeleting(false);
     }
   };
@@ -99,8 +98,8 @@ export function SettingsClient({ workspace, currentUserRole, members, user }: Se
       if (error) throw new Error(error.message);
       toast.success("Profile name updated");
       router.refresh();
-    } catch(err: any) {
-      toast.error(err.message || "Failed to update profile name");
+    } catch(err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to update profile name");
       setProfileName(user.name);
     } finally {
       setIsUpdatingProfile(false);
@@ -122,8 +121,8 @@ export function SettingsClient({ workspace, currentUserRole, members, user }: Se
       toast.success("Password updated successfully");
       setCurrentPassword("");
       setNewPassword("");
-    } catch(err: any) {
-      toast.error(err.message || "Failed to update password");
+    } catch(err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to update password");
     } finally {
       setIsUpdatingPassword(false);
     }
@@ -150,7 +149,7 @@ export function SettingsClient({ workspace, currentUserRole, members, user }: Se
       const fileName = `${user.id}-${Math.random()}.${fileExt}`;
       const filePath = `avatars/${fileName}`;
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('workspaces') // reusing existing bucket for simplicity
         .upload(filePath, file, { upsert: true });
 
@@ -166,8 +165,8 @@ export function SettingsClient({ workspace, currentUserRole, members, user }: Se
       setProfileImage(publicUrl);
       toast.success("Profile image updated successfully");
       router.refresh();
-    } catch (err: any) {
-      toast.error(err.message || "Failed to upload profile image");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to upload profile image");
     } finally {
       setIsUpdatingProfile(false);
       if (profileFileInputRef.current) profileFileInputRef.current.value = "";
@@ -200,7 +199,7 @@ export function SettingsClient({ workspace, currentUserRole, members, user }: Se
       const filePath = `logos/${fileName}`;
 
       // Upload to Supabase Storage
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('workspaces')
         .upload(filePath, file, { upsert: true });
 
@@ -216,9 +215,9 @@ export function SettingsClient({ workspace, currentUserRole, members, user }: Se
       
       toast.success("Workspace logo updated successfully");
       router.refresh();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      toast.error(err.message || "Failed to upload logo");
+      toast.error(err instanceof Error ? err.message : "Failed to upload logo");
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";

@@ -52,8 +52,8 @@ export function CreateWorkspaceDialog() {
       setName("");
       setDescription("");
       router.push(`/${slug}/board`);
-    } catch (err: any) {
-      setError(err.message || "Failed to create workspace. The slug might already be taken.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to create workspace. The slug might already be taken.");
     } finally {
       setIsLoading(false);
     }
