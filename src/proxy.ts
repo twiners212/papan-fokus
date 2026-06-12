@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Better Auth stores the session token in these cookies depending on environment
   const hasSession = 
     request.cookies.has("better-auth.session_token") || 
