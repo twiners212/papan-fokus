@@ -4,9 +4,12 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
+import { env } from "@/env";
 
-export async function ensureGuestUserAction() {
+export async function ensureGuestUserAction(): Promise<{ success: boolean; password?: string; error?: string }> {
   try {
+    const password = env.GUEST_PASSWORD;
+
     // Check if the guest user already exists
     const guestUser = await db.query.users.findFirst({
       where: eq(users.email, "guest@papanfokus.com"),
@@ -17,13 +20,13 @@ export async function ensureGuestUserAction() {
       await auth.api.signUpEmail({
         body: {
           email: "guest@papanfokus.com",
-          password: process.env.GUEST_PASSWORD || "Password123!",
+          password,
           name: "Tamu PapanFokus",
         },
       });
     }
 
-    return { success: true };
+    return { success: true, password };
   } catch (error: unknown) {
     console.error("Error ensuring guest user:", error);
     const message = error instanceof Error ? error.message : "Failed to prepare guest account";

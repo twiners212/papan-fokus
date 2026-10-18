@@ -11,7 +11,10 @@ import { ensureGuestUserAction } from "@/actions/auth-actions";
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const rawCallback = searchParams.get("callbackUrl");
+  const callbackUrl = (rawCallback && rawCallback.startsWith('/') && !rawCallback.startsWith('//'))
+    ? rawCallback
+    : "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +57,7 @@ function LoginContent() {
 
       const { error } = await authClient.signIn.email({
         email: "guest@papanfokus.com",
-        password: process.env.NEXT_PUBLIC_GUEST_PASSWORD || "Password123!",
+        password: res.password || process.env.NEXT_PUBLIC_GUEST_PASSWORD || "Password123!",
       });
 
       if (error) {

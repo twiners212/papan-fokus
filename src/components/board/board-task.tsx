@@ -31,14 +31,13 @@ const PRIORITIES = {
 
 const isOverdue = (dueDate: Date | string) => {
   const date = new Date(dueDate);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return date < today;
+  const now = new Date();
+  return date < now;
 };
 
 const formatDueDate = (dueDate: Date | string) => {
   const date = new Date(dueDate);
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 };
 
 export function BoardTask({ task, isOverlay, onClick }: BoardTaskProps) {

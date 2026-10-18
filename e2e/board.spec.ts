@@ -39,7 +39,7 @@ test.describe('Kanban Board E2E', () => {
     await page.waitForURL(`**/*/board`);
 
     // 6. Verify Board UI
-    const emptyStateHeading = page.getByText(/welcome to your new board/i);
+    const emptyStateHeading = page.getByRole('heading', { name: /papan kanban masih kosong/i });
     const generateBtn = page.getByRole('button', { name: /generate default columns/i });
 
     // Wait for the empty state to appear

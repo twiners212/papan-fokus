@@ -1,0 +1,33 @@
+name: Supabase Keep-Alive
+
+on:
+  schedule:
+    # Run every 3 days at 06:00 UTC (well within Supabase's 7-day inactivity pause window)
+    - cron: '0 6 */3 * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  ping:
+    name: Ping Supabase Keepalive
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send keep-alive ping to Supabase endpoint
+        run: |
+          TARGET_URL="${{ secrets.APP_URL || 'https://papanfokus.vercel.app' }}/api/cron/keepalive"
+          echo "Sending keep-alive ping to $TARGET_URL..."
+          if [ -n "${{ secrets.CRON_SECRET }}" ]; then
+            HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "$TARGET_URL")
+          else
+            HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" "$TARGET_URL")
+          fi
+          
+          echo "Response code: $HTTP_STATUS"
+          cat response.json || true
+          
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+            echo "Supabase ping successful."
+            exit 0
+          else
+            echo "Supabase ping failed with status $HTTP_STATUS"
+            exit 1
+          fi

@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { tasks, activityLogs, users } from "@/db/schema";
-import { and, eq, isNull, desc, sql } from "drizzle-orm";
+import { and, eq, isNull, desc, asc, sql } from "drizzle-orm";
 import { verifyWorkspaceMembership, verifyWorkspaceEditor } from "./membership";
 
 export async function getTasks(workspaceId: string, userId: string) {
@@ -11,6 +11,7 @@ export async function getTasks(workspaceId: string, userId: string) {
       eq(tasks.workspaceId, workspaceId),
       isNull(tasks.deletedAt)
     ),
+    orderBy: [asc(tasks.position)],
   });
 }
 

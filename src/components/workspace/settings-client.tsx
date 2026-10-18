@@ -20,11 +20,11 @@ import {
 interface SettingsClientProps {
   workspace: { id: string; name: string; logoUrl?: string | null };
   currentUserRole: string;
-  members: Record<string, unknown>[]; // eslint-disable-line @typescript-eslint/no-unused-vars
+  members: Record<string, unknown>[];
   user: { id: string; name: string; image?: string | null };
 }
 
-export function SettingsClient({ workspace, currentUserRole, members, user }: SettingsClientProps) {
+export function SettingsClient({ workspace, currentUserRole, user }: SettingsClientProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("general");
   const [isUploading, setIsUploading] = useState(false);
@@ -70,14 +70,6 @@ export function SettingsClient({ workspace, currentUserRole, members, user }: Se
   const handleDeleteWorkspace = async () => {
     try {
       setIsDeleting(true);
-      // Broadcast deletion event to active users
-      const channel = supabase.channel(`workspace:${workspace.id}`);
-      await channel.send({
-        type: 'broadcast',
-        event: 'WORKSPACE_DELETED',
-        payload: { workspaceId: workspace.id }
-      });
-      
       await deleteWorkspaceAction(workspace.id);
       toast.success("Workspace deleted");
       router.push("/dashboard");

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createTask, moveTask, updateTask, assignTask, deleteTask, /* unused */ restoreTask } from "../task";
+import { getTasks, createTask, moveTask, updateTask, assignTask, deleteTask } from "../task";
 import * as membership from "../membership";
 import { db } from "@/db";
 
@@ -34,7 +34,10 @@ vi.mock("@/db", () => {
       }),
       query: {
         tasks: {
-          findMany: vi.fn().mockResolvedValue([]),
+          findMany: vi.fn().mockResolvedValue([
+            { id: "task-1", position: 1000 },
+            { id: "task-2", position: 2000 },
+          ]),
         },
       },
     },
@@ -51,6 +54,24 @@ vi.mock("../membership", () => {
 describe("Task DAL", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  describe("getTasks", () => {
+    it("should verify membership and return tasks ordered by position", async () => {
+      vi.mocked(membership.verifyWorkspaceMembership).mockResolvedValueOnce({
+        workspaceId: "ws-1",
+        userId: "user-1",
+        role: "member",
+        joinedAt: new Date(),
+      });
+
+      const result = await getTasks("ws-1", "user-1");
+      expect(membership.verifyWorkspaceMembership).toHaveBeenCalledWith("ws-1", "user-1");
+      expect(db.query.tasks.findMany).toHaveBeenCalledTimes(1);
+      expect(result).toHaveLength(2);
+      expect(result[0].position).toBe(1000);
+      expect(result[1].position).toBe(2000);
+    });
   });
 
   describe("createTask", () => {

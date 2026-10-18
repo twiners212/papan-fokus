@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getWorkspaceMembersAction, updateTaskAction, getTaskActivityLogsAction } from "@/actions/board-actions";
 import { deleteTaskAction } from "@/actions/task-actions";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 // Shadcn Components
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -43,6 +44,13 @@ const PRIORITIES = [
   { value: "urgent", label: "Urgent", icon: AlertCircle, color: "text-red-500" },
 ];
 
+const formatLocalDate = (dateStr: string) => {
+  if (!dateStr) return "No date";
+  const [y, m, d] = dateStr.split("-").map(Number);
+  if (!y || !m || !d) return "No date";
+  return format(new Date(y, m - 1, d), "PP");
+};
+
 export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, userRole, columns }: TaskDetailDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -66,7 +74,10 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
       setLocalAssignee(task.assigneeId || "");
       if (task.dueDate) {
         const d = new Date(task.dueDate);
-        setLocalDueDate(d.toISOString().split("T")[0]);
+        const y = d.getUTCFullYear();
+        const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+        const day = String(d.getUTCDate()).padStart(2, "0");
+        setLocalDueDate(`${y}-${m}-${day}`);
       } else {
         setLocalDueDate("");
       }
@@ -101,6 +112,25 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["board", workspaceId] });
+    },
+    onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : "Gagal memperbarui tugas";
+      toast.error(message);
+      if (task) {
+        setLocalTitle(task.title || "");
+        setLocalDesc(task.description || "");
+        setLocalPriority(task.priority || "medium");
+        setLocalAssignee(task.assigneeId || "");
+        if (task.dueDate) {
+          const d = new Date(task.dueDate);
+          const y = d.getUTCFullYear();
+          const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+          const day = String(d.getUTCDate()).padStart(2, "0");
+          setLocalDueDate(`${y}-${m}-${day}`);
+        } else {
+          setLocalDueDate("");
+        }
+      }
     }
   });
 
@@ -110,8 +140,13 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
       return deleteTaskAction(task.id, workspaceId);
     },
     onSuccess: () => {
+      toast.success("Tugas berhasil dihapus");
       queryClient.invalidateQueries({ queryKey: ["board", workspaceId] });
       handleClose();
+    },
+    onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : "Gagal menghapus tugas";
+      toast.error(message);
     }
   });
 
@@ -138,7 +173,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
       payload.assigneeId = value || null;
     } else if (field === "dueDate") {
       setLocalDueDate(value || "");
-      payload.dueDate = value ? new Date(value) : null;
+      payload.dueDate = value ? new Date(`${value}T12:00:00.000Z`) : null;
     }
 
     updateMutation.mutate(payload);
@@ -154,6 +189,7 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
   const isCreator = task?.createdBy === currentUserId;
   const isAssignee = task?.assigneeId === currentUserId;
 
+  const canEditTitle = isAdmin || isCreator || isAssignee;
   const canEditDescription = isAdmin || isCreator || isAssignee;
   const canEditPriority = isAdmin || isCreator;
   const canEditDueDate = isAdmin || isCreator;
@@ -184,7 +220,8 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
               value={localTitle}
               onChange={(e) => setLocalTitle(e.target.value)}
               onBlur={(e) => handleChange("title", e.target.value)}
-              className="w-full bg-transparent font-headline text-[24px] text-on-surface leading-tight focus:outline-none focus:ring-2 focus:ring-accent/50 rounded-sm"
+              disabled={!canEditTitle}
+              className={`w-full bg-transparent font-headline text-[24px] text-on-surface leading-tight focus:outline-none focus:ring-2 focus:ring-accent/50 rounded-sm ${!canEditTitle ? "opacity-70 cursor-not-allowed" : ""}`}
               placeholder="Task title"
             />
           </div>
@@ -311,17 +348,27 @@ export function TaskDetailDrawer({ task, onClose, workspaceId, currentUserId, us
                   >
                     <CalendarIcon className="w-4 h-4 text-text-muted shrink-0" />
                     <span className={`font-body-sm text-sm font-medium truncate ${localDueDate ? 'text-on-surface' : 'text-text-muted'}`}>
-                      {localDueDate ? format(new Date(localDueDate), "PP") : "No date"}
+                      {formatLocalDate(localDueDate)}
                     </span>
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0 bg-surface border-border-subtle text-on-surface" align="start">
                   <Calendar
                     mode="single"
-                    selected={localDueDate ? new Date(localDueDate) : undefined}
+                    selected={
+                      localDueDate
+                        ? (() => {
+                            const [y, m, d] = localDueDate.split("-").map(Number);
+                            return new Date(y, m - 1, d);
+                          })()
+                        : undefined
+                    }
                     onSelect={(d) => {
                       if (d) {
-                        const dateStr = d.toLocaleDateString('en-CA');
+                        const y = d.getFullYear();
+                        const m = String(d.getMonth() + 1).padStart(2, "0");
+                        const day = String(d.getDate()).padStart(2, "0");
+                        const dateStr = `${y}-${m}-${day}`;
                         handleChange("dueDate", dateStr);
                       } else {
                         handleChange("dueDate", "");

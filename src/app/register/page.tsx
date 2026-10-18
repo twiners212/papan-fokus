@@ -10,7 +10,10 @@ import { toast } from "sonner";
 function RegisterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const rawCallback = searchParams.get("callbackUrl");
+  const callbackUrl = (rawCallback && rawCallback.startsWith('/') && !rawCallback.startsWith('//'))
+    ? rawCallback
+    : "/dashboard";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -9,10 +9,13 @@ export const env = createEnv({
     SUPABASE_JWT_SECRET: z.string().min(1),
     BETTER_AUTH_SECRET: z.string().min(1),
     BETTER_AUTH_URL: z.string().url().optional(),
+    CRON_SECRET: z.string().min(1).optional(),
+    GUEST_PASSWORD: z.string().min(1).default("Password123!"),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
+    NEXT_PUBLIC_GUEST_PASSWORD: z.string().min(1).default("Password123!"),
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
@@ -21,7 +24,10 @@ export const env = createEnv({
     SUPABASE_JWT_SECRET: process.env.SUPABASE_JWT_SECRET,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    CRON_SECRET: process.env.CRON_SECRET,
+    GUEST_PASSWORD: process.env.GUEST_PASSWORD,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_GUEST_PASSWORD: process.env.NEXT_PUBLIC_GUEST_PASSWORD,
   },
 });

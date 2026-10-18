@@ -1,4 +1,3 @@
-import { Menu } from "lucide-react";
 import { SettingsClient } from "@/components/workspace/settings-client";
 import { getWorkspaceBySlug } from "@/dal/workspace";
 import { getWorkspaceMembersAction } from "@/actions/board-actions";
@@ -34,10 +33,6 @@ export default async function WorkspaceSettingsPage({
         <div>
           <h1 className="text-xl font-semibold text-on-surface">Workspace Settings</h1>
         </div>
-        {/* Mobile Menu Toggle */}
-        <button className="md:hidden p-2 text-text-muted hover:text-on-surface transition-colors" aria-label="Buka menu navigasi">
-          <Menu className="w-6 h-6" />
-        </button>
       </header>
 
       {/* Settings Layout & Interactive Client Component */}

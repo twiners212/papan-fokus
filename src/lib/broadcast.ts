@@ -20,3 +20,23 @@ export async function broadcastBoardUpdate(workspaceId: string) {
     console.error("Failed to broadcast board update:", error);
   }
 }
+
+export async function broadcastWorkspaceDeleted(workspaceId: string) {
+  try {
+    // Only use server-side
+    if (typeof window !== "undefined") return;
+
+    const supabase = createClient(
+      env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    await supabase.channel(`workspace:${workspaceId}`).httpSend(
+      "WORKSPACE_DELETED",
+      { workspaceId }
+    );
+  } catch (error) {
+    console.error("Failed to broadcast workspace deletion:", error);
+  }
+}
+

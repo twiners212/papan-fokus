@@ -4,7 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { getWorkspaceBySlug } from "@/dal/workspace";
 import { calculateVelocity, calculateCycleTime, getTeamWorkload } from "@/dal/analytics";
 import { verifyWorkspaceMembership } from "@/dal/membership";
-import { Menu, Activity, Timer, Users } from "lucide-react";
+import { Activity, Timer, Users } from "lucide-react";
 
 export default async function AnalyticsPage({
   params,
@@ -38,9 +38,6 @@ export default async function AnalyticsPage({
         <div>
           <h1 className="text-xl font-semibold text-on-surface">Analytics Overview</h1>
         </div>
-        <button className="md:hidden p-2 text-text-muted hover:text-on-surface transition-colors" aria-label="Buka menu navigasi">
-          <Menu className="w-6 h-6" />
-        </button>
       </header>
 
       <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">

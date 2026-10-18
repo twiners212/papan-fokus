@@ -18,7 +18,7 @@ export async function createColumnAction(
 ) {
   const session = await getSession();
   const column = await createColumn(workspaceId, session.user.id, payload);
-  revalidatePath(`/${workspaceId}/board`);
+  revalidatePath("/[slug]/board", "page");
   await broadcastBoardUpdate(workspaceId);
   return column;
 }
@@ -30,7 +30,7 @@ export async function updateColumnAction(
 ) {
   const session = await getSession();
   const column = await updateColumn(columnId, workspaceId, session.user.id, payload);
-  revalidatePath(`/${workspaceId}/board`);
+  revalidatePath("/[slug]/board", "page");
   await broadcastBoardUpdate(workspaceId);
   return column;
 }
@@ -38,7 +38,7 @@ export async function updateColumnAction(
 export async function deleteColumnAction(columnId: string, workspaceId: string) {
   const session = await getSession();
   const column = await deleteColumn(columnId, workspaceId, session.user.id);
-  revalidatePath(`/${workspaceId}/board`);
+  revalidatePath("/[slug]/board", "page");
   await broadcastBoardUpdate(workspaceId);
   return column;
 }

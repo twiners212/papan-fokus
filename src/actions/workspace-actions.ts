@@ -55,7 +55,7 @@ export async function generateDummyDataAction(workspaceId: string) {
 
   const result = await generateDummyData(workspaceId, session.user.id);
   
-  revalidatePath(`/${workspaceId}/board`);
+  revalidatePath("/[slug]/board", "page");
   await broadcastBoardUpdate(workspaceId);
   
   return result;

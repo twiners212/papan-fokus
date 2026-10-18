@@ -8,7 +8,7 @@ export default async function BoardPage({ params }: { params: Promise<{ slug: st
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect("/sign-in");
+    redirect("/login");
   }
 
   const { slug } = await params;

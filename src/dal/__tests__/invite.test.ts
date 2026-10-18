@@ -32,6 +32,7 @@ vi.mock("@/db", () => {
 
         mockTx.where = vi.fn().mockImplementation(() => ({
           limit: mockLimit,
+          returning: vi.fn().mockResolvedValue([{ id: "link-1" }]),
           then: function(resolve: (val: unknown) => void) { resolve([{ count: 5 }]); }
         }));
 
@@ -122,5 +123,44 @@ describe("Invite DAL", () => {
         expect(result.error).toBe("Kapasitas tautan undangan sudah penuh");
       }
     });
+
+    it("should reject when concurrent update fails because max uses was reached during race condition", async () => {
+      vi.mocked(db.transaction).mockImplementationOnce(async (cb) => {
+        const mockLimit = vi.fn()
+          .mockResolvedValueOnce([{ 
+            link: { id: "link-1", workspaceId: "ws-1", usesCount: 9, maxUses: 10, role: "member" }, 
+            workspace: { id: "ws-1", slug: "ws-test" } 
+          }])
+          .mockResolvedValueOnce([]);
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mockTx: any = {
+          select: vi.fn().mockReturnThis(),
+          from: vi.fn().mockReturnThis(),
+          innerJoin: vi.fn().mockReturnThis(),
+          insert: vi.fn().mockReturnThis(),
+          values: vi.fn().mockReturnThis(),
+          onConflictDoNothing: vi.fn().mockReturnThis(),
+          returning: vi.fn().mockResolvedValue([{ userId: "user-new" }]),
+          update: vi.fn().mockReturnThis(),
+          set: vi.fn().mockReturnThis(),
+        };
+
+        mockTx.where = vi.fn().mockImplementation(() => ({
+          limit: mockLimit,
+          returning: vi.fn().mockResolvedValue([]), // Empty array returned by atomic update
+          then: function(resolve: (val: unknown) => void) { resolve([{ count: 5 }]); }
+        }));
+
+        return await cb(mockTx);
+      });
+
+      const result = await joinWorkspaceViaLink("tok_123", "user-new");
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error).toBe("Kapasitas tautan undangan sudah penuh");
+      }
+    });
   });
 });
+

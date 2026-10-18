@@ -46,8 +46,10 @@ export function useRealtimeBoard(workspaceId: string, currentUserId: string) {
             const users: PresenceUser[] = [];
             for (const id in newState) {
               // Get the first presence instance for this user
-              const presence = newState[id][0] as unknown as PresenceUser;
-              users.push({ userId: id, onlineAt: presence.onlineAt });
+              const presence = newState[id]?.[0] as unknown as PresenceUser | undefined;
+              if (presence?.onlineAt) {
+                users.push({ userId: id, onlineAt: presence.onlineAt });
+              }
             }
             setActiveUsers(users);
           })

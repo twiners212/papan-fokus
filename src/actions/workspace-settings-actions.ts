@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { updateWorkspace, deleteWorkspace } from "@/dal/workspace";
 import { revalidatePath } from "next/cache";
+import { broadcastWorkspaceDeleted } from "@/lib/broadcast";
 
 async function getSession() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -24,6 +25,8 @@ export async function updateWorkspaceSettingsAction(
 
 export async function deleteWorkspaceAction(workspaceId: string) {
   const session = await getSession();
+  // Broadcast deletion to all connected workspace clients first
+  await broadcastWorkspaceDeleted(workspaceId);
   await deleteWorkspace(workspaceId, session.user.id);
   // Revalidate entire layout since the workspace list changed
   revalidatePath("/", "layout");

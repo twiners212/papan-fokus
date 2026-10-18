@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { createTask, updateTask, moveTask, assignTask, deleteTask, restoreTask } from "@/dal/task";
+import { createTask, moveTask, assignTask, deleteTask, restoreTask } from "@/dal/task";
 import { revalidatePath } from "next/cache";
 import { broadcastBoardUpdate } from "@/lib/broadcast";
 
@@ -18,19 +18,7 @@ export async function createNewTaskAction(
 ) {
   const session = await getSession();
   const task = await createTask(workspaceId, session.user.id, payload);
-  revalidatePath(`/${workspaceId}/board`);
-  await broadcastBoardUpdate(workspaceId);
-  return task;
-}
-
-export async function updateTaskAction(
-  taskId: string,
-  workspaceId: string,
-  payload: { title?: string; description?: string }
-) {
-  const session = await getSession();
-  const task = await updateTask(taskId, workspaceId, session.user.id, payload);
-  revalidatePath(`/${workspaceId}/board`);
+  revalidatePath("/[slug]/board", "page");
   await broadcastBoardUpdate(workspaceId);
   return task;
 }
@@ -55,7 +43,7 @@ export async function assignTaskAction(
 ) {
   const session = await getSession();
   const task = await assignTask(taskId, workspaceId, session.user.id, assigneeId);
-  revalidatePath(`/${workspaceId}/board`);
+  revalidatePath("/[slug]/board", "page");
   await broadcastBoardUpdate(workspaceId);
   return task;
 }
@@ -63,7 +51,7 @@ export async function assignTaskAction(
 export async function deleteTaskAction(taskId: string, workspaceId: string) {
   const session = await getSession();
   const task = await deleteTask(taskId, workspaceId, session.user.id);
-  revalidatePath(`/${workspaceId}/board`);
+  revalidatePath("/[slug]/board", "page");
   await broadcastBoardUpdate(workspaceId);
   return task;
 }
@@ -71,7 +59,7 @@ export async function deleteTaskAction(taskId: string, workspaceId: string) {
 export async function restoreTaskAction(taskId: string, workspaceId: string) {
   const session = await getSession();
   const task = await restoreTask(taskId, workspaceId, session.user.id);
-  revalidatePath(`/${workspaceId}/board`);
+  revalidatePath("/[slug]/board", "page");
   await broadcastBoardUpdate(workspaceId);
   return task;
 }

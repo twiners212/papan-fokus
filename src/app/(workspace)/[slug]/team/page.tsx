@@ -1,4 +1,4 @@
-import { Menu, Shield, User } from "lucide-react";
+import { Shield, User } from "lucide-react";
 import { getWorkspaceBySlug } from "@/dal/workspace";
 import { getWorkspaceMembersAction } from "@/actions/board-actions";
 import { auth } from "@/lib/auth";
@@ -33,9 +33,6 @@ export default async function TeamPage({
         <div>
           <h1 className="text-xl font-semibold text-on-surface">Team Members</h1>
         </div>
-        <button className="md:hidden p-2 text-text-muted hover:text-on-surface transition-colors" aria-label="Buka menu navigasi">
-          <Menu className="w-6 h-6" />
-        </button>
       </header>
 
       <div className="flex-1 overflow-y-auto p-4 md:p-8">

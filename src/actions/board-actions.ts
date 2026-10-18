@@ -53,7 +53,7 @@ export async function updateTaskAction(
   if (!session) throw new Error("Unauthorized");
 
   const task = await updateTask(taskId, workspaceId, session.user.id, payload);
-  revalidatePath("/"); // revalidate board
+  revalidatePath("/[slug]/board", "page");
   await broadcastBoardUpdate(workspaceId);
   return task;
 }

@@ -11,9 +11,10 @@ export async function proxy(request: NextRequest) {
   // Define route categories
   const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/register');
   const isApiRoute = pathname.startsWith('/api');
+  const isLandingRoute = pathname === '/' || pathname.startsWith('/landing-page');
 
   // If user is NOT logged in and trying to access a protected page
-  if (!hasSession && !isAuthRoute && !isApiRoute) {
+  if (!hasSession && !isAuthRoute && !isApiRoute && !isLandingRoute) {
     const loginUrl = new URL('/login', request.url);
     // Preserve the original URL so the user can be redirected back (useful for /invite links)
     if (pathname !== '/') {
@@ -25,7 +26,10 @@ export async function proxy(request: NextRequest) {
   // If user IS logged in and tries to access login/register
   if (hasSession && isAuthRoute) {
     const callbackUrl = searchParams.get('callbackUrl');
-    return NextResponse.redirect(new URL(callbackUrl || '/dashboard', request.url));
+    const safeCallback = (callbackUrl && callbackUrl.startsWith('/') && !callbackUrl.startsWith('//'))
+      ? callbackUrl
+      : '/dashboard';
+    return NextResponse.redirect(new URL(safeCallback, request.url));
   }
 
   return NextResponse.next();

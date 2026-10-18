@@ -103,13 +103,23 @@ export async function joinWorkspaceViaLink(token: string, userId: string) {
         return { success: true, data: { workspaceId: link.workspaceId, slug: workspace.slug, existing: true } };
       }
 
-      // Update uses_count
-      await tx
+      // Update uses_count atomically with capacity guard
+      const updatedLink = await tx
         .update(inviteLinks)
         .set({
-          usesCount: link.usesCount + 1,
+          usesCount: sql`${inviteLinks.usesCount} + 1`,
         })
-        .where(eq(inviteLinks.id, link.id));
+        .where(
+          and(
+            eq(inviteLinks.id, link.id),
+            sql`${inviteLinks.usesCount} < ${inviteLinks.maxUses}`
+          )
+        )
+        .returning({ id: inviteLinks.id });
+
+      if (!updatedLink || updatedLink.length === 0) {
+        throw new Error("Kapasitas tautan undangan sudah penuh");
+      }
 
       // Activity Log
       await tx.insert(activityLogs).values({
