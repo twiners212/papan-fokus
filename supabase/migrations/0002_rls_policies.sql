@@ -9,6 +9,7 @@ ALTER TABLE "notifications" ENABLE ROW LEVEL SECURITY;
 -- Realtime WebSocket hanya perlu hak membaca (SELECT) untuk me-listen channel.
 
 -- 1. Kebijakan untuk `columns`
+DROP POLICY IF EXISTS "Enable real-time read access for workspace members on columns" ON "columns";
 CREATE POLICY "Enable real-time read access for workspace members on columns" 
 ON "columns"
 FOR SELECT 
@@ -22,6 +23,7 @@ USING (
 );
 
 -- 2. Kebijakan untuk `tasks`
+DROP POLICY IF EXISTS "Enable real-time read access for workspace members on tasks" ON "tasks";
 CREATE POLICY "Enable real-time read access for workspace members on tasks" 
 ON "tasks"
 FOR SELECT 
@@ -35,6 +37,7 @@ USING (
 );
 
 -- 3. Kebijakan untuk `activity_logs`
+DROP POLICY IF EXISTS "Enable real-time read access for workspace members on activity_logs" ON "activity_logs";
 CREATE POLICY "Enable real-time read access for workspace members on activity_logs" 
 ON "activity_logs"
 FOR SELECT 
@@ -48,6 +51,7 @@ USING (
 );
 
 -- 4. Kebijakan untuk `notifications`
+DROP POLICY IF EXISTS "Enable real-time read access for owner on notifications" ON "notifications";
 CREATE POLICY "Enable real-time read access for owner on notifications" 
 ON "notifications"
 FOR SELECT 
