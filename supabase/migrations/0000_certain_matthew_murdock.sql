@@ -1,6 +1,21 @@
-CREATE TYPE "public"."activity_type_enum" AS ENUM('TASK_CREATED', 'TASK_UPDATED', 'TASK_MOVED', 'TASK_ASSIGNED', 'TASK_UNASSIGNED', 'TASK_DELETED', 'TASK_RESTORED', 'COLUMN_CREATED', 'COLUMN_UPDATED', 'COLUMN_MOVED', 'COLUMN_DELETED', 'WORKSPACE_UPDATED', 'OWNERSHIP_TRANSFERRED', 'MEMBER_JOINED', 'MEMBER_REMOVED', 'MEMBER_LEFT');--> statement-breakpoint
-CREATE TYPE "public"."notification_type_enum" AS ENUM('INVITED_TO_WORKSPACE', 'TASK_ASSIGNED');--> statement-breakpoint
-CREATE TYPE "public"."workspace_role_enum" AS ENUM('admin', 'member', 'viewer');--> statement-breakpoint
+DO $$ BEGIN
+	CREATE TYPE "public"."activity_type_enum" AS ENUM('TASK_CREATED', 'TASK_UPDATED', 'TASK_MOVED', 'TASK_ASSIGNED', 'TASK_UNASSIGNED', 'TASK_DELETED', 'TASK_RESTORED', 'COLUMN_CREATED', 'COLUMN_UPDATED', 'COLUMN_MOVED', 'COLUMN_DELETED', 'WORKSPACE_UPDATED', 'OWNERSHIP_TRANSFERRED', 'MEMBER_JOINED', 'MEMBER_REMOVED', 'MEMBER_LEFT');
+EXCEPTION
+	WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+	CREATE TYPE "public"."notification_type_enum" AS ENUM('INVITED_TO_WORKSPACE', 'TASK_ASSIGNED');
+EXCEPTION
+	WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+	CREATE TYPE "public"."workspace_role_enum" AS ENUM('admin', 'member', 'viewer');
+EXCEPTION
+	WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
 CREATE TABLE "activity_logs" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"workspace_id" uuid NOT NULL,
