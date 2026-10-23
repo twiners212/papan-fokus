@@ -34,21 +34,51 @@ Aplikasi ini dirancang dengan arsitektur **Multi-Tenant Isolation** berlapis pad
 
 ## 📸 Tampilan Aplikasi (Live Production)
 
-### 🖥️ Desktop Workspace View (Kanban Board)
-Tampilan papan Kanban interaktif dengan bilah progres dinamis, kolom alur kerja (*Backlog, To Do, In Progress, Done*), avatar kolaborator, dan kartu tugas berindeks ID unik.
-
-![PapanFokus Kanban Board](public/screenshot-board.png)
-
-### 🌐 Public Landing Page & Instant Guest Access
-Halaman depan modern dan responsif dengan navigasi cepat ke etalase fitur, informasi tech stack, dan akses login tamu satu-klik (*One-Click Demo Guest Login*).
-
-![PapanFokus Landing Page](public/screenshot-landing.png)
-
-### 📱 Responsive Mobile View (Optimized Header & Drawer)
-Antarmuka mobile ramah sentuhan dengan *horizontal scrollable columns*, tombol aksi cepat, serta panel navigasi samping berbasis animasi Framer Motion.
-
 <div align="center">
-  <img src="public/screenshot-mobile.png" width="360" alt="PapanFokus Mobile View" />
+  <table>
+    <thead>
+      <tr>
+        <th width="70%" align="center">🖥️ Desktop Workspace (Kanban Board)</th>
+        <th width="30%" align="center">📱 Mobile Responsive View</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td align="center" valign="top">
+          <a href="https://papan-fokus.vercel.app" target="_blank">
+            <img src="./public/live-kanban-board.png" alt="PapanFokus Desktop Kanban Board" width="100%" />
+          </a>
+        </td>
+        <td align="center" valign="top">
+          <a href="https://papan-fokus.vercel.app" target="_blank">
+            <img src="./public/live-mobile-view.png" alt="PapanFokus Mobile View" width="100%" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <sub><i>Kolaborasi real-time, drag-and-drop fractional positioning, kalkulator progres tugas, dan presence avatar stack.</i></sub>
+        </td>
+        <td align="center">
+          <sub><i>Header teroptimasi, scrolling kolom sentuh, dan drawer navigasi Framer Motion.</i></sub>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br/>
+
+  <details>
+    <summary><strong>🌐 Klik untuk Melihat Tampilan Public Landing Page</strong></summary>
+    <br/>
+    <p align="center">
+      <a href="https://papan-fokus.vercel.app" target="_blank">
+        <img src="./public/live-landing-page.png" alt="PapanFokus Public Landing Page" width="95%" />
+      </a>
+      <br/>
+      <sub><i>Etalase produk interaktif dengan akses One-Click Demo Guest Login tanpa registrasi manual.</i></sub>
+    </p>
+  </details>
 </div>
 
 ---
