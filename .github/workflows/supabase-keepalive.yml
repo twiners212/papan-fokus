@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Send keep-alive ping to Supabase endpoint
         run: |
-          TARGET_URL="${{ secrets.APP_URL || 'https://papanfokus.vercel.app' }}/api/cron/keepalive"
+          TARGET_URL="${{ secrets.APP_URL || 'https://papan-fokus.vercel.app' }}/api/cron/keepalive"
           echo "Sending keep-alive ping to $TARGET_URL..."
           if [ -n "${{ secrets.CRON_SECRET }}" ]; then
             HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "$TARGET_URL")
